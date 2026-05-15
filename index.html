@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flipper Signal DB</title>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #161b24;
+      --surface2: #1e2535;
+      --border: #2a3347;
+      --accent: #f79324;
+      --accent2: #ff5f1f;
+      --text: #e8eaf0;
+      --muted: #7a8499;
+      --green: #3ddc84;
+      --blue: #4fa3e0;
+      --purple: #9b6dff;
+      --red: #ff5f5f;
+      --yellow: #f7c948;
+      --teal: #2dd4bf;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .btn-outline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: rgba(247,147,36,0.08);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(160deg, #101520 0%, #0d0f14 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 24px 48px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    /* ── Search ── */
+    .search-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    #search {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #search::placeholder { color: var(--muted); }
+
+    #search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(247,147,36,0.15);
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── Filters ── */
+    .filters-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .filter-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-right: 4px;
+    }
+
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      border-color: transparent;
+      color: #0d0f14;
+      font-weight: 600;
+    }
+
+    .filter-btn .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* category colors */
+    .cat-all       .dot { background: var(--text); }
+    .cat-all.active      { background: var(--text); }
+    .cat-garage    .dot { background: var(--green); }
+    .cat-garage.active   { background: var(--green); }
+    .cat-car       .dot { background: var(--blue); }
+    .cat-car.active      { background: var(--blue); }
+    .cat-intercom  .dot { background: var(--purple); }
+    .cat-intercom.active { background: var(--purple); }
+    .cat-weather   .dot { background: var(--teal); }
+    .cat-weather.active  { background: var(--teal); }
+    .cat-custom    .dot { background: var(--yellow); }
+    .cat-custom.active   { background: var(--yellow); }
+
+    /* ── Results bar ── */
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .results-count {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .results-count strong {
+      color: var(--text);
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(247,147,36,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .cat-badge {
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .cat-badge.garage_doors    { background: rgba(61,220,132,0.15); color: var(--green); }
+    .cat-badge.car_keys        { background: rgba(79,163,224,0.15); color: var(--blue); }
+    .cat-badge.intercoms       { background: rgba(155,109,255,0.15); color: var(--purple); }
+    .cat-badge.weather_stations{ background: rgba(45,212,191,0.15); color: var(--teal); }
+    .cat-badge.custom          { background: rgba(247,201,72,0.15); color: var(--yellow); }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .meta-item {
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
+
+    .meta-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .meta-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .contributor {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .contributor-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .btn-download {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d0f14;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-download:hover {
+      opacity: 0.88;
+      transform: scale(1.03);
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--muted);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .empty h3 { color: var(--text); margin-bottom: 8px; }
+
+    /* ── Submit section ── */
+    .submit-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      margin-top: 56px;
+    }
+
+    .submit-section h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .submit-section > p {
+      color: var(--muted);
+      margin-bottom: 32px;
+      max-width: 640px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #0d0f14;
+      margin-bottom: 12px;
+    }
+
+    .step h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .step code {
+      background: rgba(247,147,36,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.82rem;
+    }
+
+    .json-preview {
+      background: #0a0c12;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+
+    .json-preview pre {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .json-key   { color: var(--blue); }
+    .json-str   { color: var(--green); }
+    .json-punct { color: var(--muted); }
+
+    .submit-cta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d0f14;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .note {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      main { padding: 24px 16px 60px; }
+      .submit-section { padding: 24px; }
+      .header-inner { gap: 10px; }
+      .badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">📡</div>
+      <span class="logo-text">Flipper <span>Signal DB</span></span>
+    </a>
+    <div class="header-right">
+      <span class="badge" id="signal-count-badge">Loading…</span>
+      <a class="btn-outline" href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <h1>Community <span class="highlight">Flipper Zero</span><br>Signal Database</h1>
+  <p>Browse, download, and contribute Sub-GHz signal files recorded with the Flipper Zero. Open-source &amp; community-powered.</p>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="search" placeholder="Search by name, frequency, protocol…" autocomplete="off" />
+  </div>
+</section>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Filters -->
+  <div class="filters-row">
+    <span class="filter-label">Category:</span>
+    <button class="filter-btn cat-all active" data-cat="all">
+      <span class="dot"></span> All
+    </button>
+    <button class="filter-btn cat-garage" data-cat="garage_doors">
+      <span class="dot"></span> Garage Doors
+    </button>
+    <button class="filter-btn cat-car" data-cat="car_keys">
+      <span class="dot"></span> Car Keys
+    </button>
+    <button class="filter-btn cat-intercom" data-cat="intercoms">
+      <span class="dot"></span> Intercoms
+    </button>
+    <button class="filter-btn cat-weather" data-cat="weather_stations">
+      <span class="dot"></span> Weather Stations
+    </button>
+    <button class="filter-btn cat-custom" data-cat="custom">
+      <span class="dot"></span> Custom
+    </button>
+  </div>
+
+  <!-- Results bar -->
+  <div class="results-bar">
+    <span class="results-count" id="results-count"></span>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid"></div>
+
+  <!-- Submit section -->
+  <section class="submit-section" id="submit">
+    <h2>📬 Submit a Signal</h2>
+    <p>Have a signal captured on your Flipper Zero? Share it with the community by opening a Pull Request on GitHub. It only takes a few minutes.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Fork the repo</h3>
+        <p>Click <strong>Fork</strong> on GitHub to get your own copy of <code>flipper-signal-db</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Add your .sub file</h3>
+        <p>Copy your Flipper <code>.sub</code> file into the <code>signals/</code> folder. Use a descriptive filename like <code>my_gate_433.sub</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Update signals.json</h3>
+        <p>Add a new entry to <code>signals.json</code> with all fields filled in (see format below).</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Open a Pull Request</h3>
+        <p>Submit a PR against <code>main</code>. A maintainer will review and merge it within a few days.</p>
+      </div>
+    </div>
+
+    <div class="json-preview">
+      <pre><span class="json-punct">{</span>
+  <span class="json-key">"name"</span><span class="json-punct">:</span>        <span class="json-str">"My Garage Door 433MHz"</span><span class="json-punct">,</span>
+  <span class="json-key">"frequency"</span><span class="json-punct">:</span>   <span class="json-str">"433.92 MHz"</span><span class="json-punct">,</span>
+  <span class="json-key">"protocol"</span><span class="json-punct">:</span>    <span class="json-str">"OOK"</span><span class="json-punct">,</span>
+  <span class="json-key">"description"</span><span class="json-punct">:</span> <span class="json-str">"Single-channel remote for a XYZ brand gate opener."</span><span class="json-punct">,</span>
+  <span class="json-key">"category"</span><span class="json-punct">:</span>    <span class="json-str">"garage_doors"</span><span class="json-punct">,</span>
+  <span class="json-key">"contributor"</span><span class="json-punct">:</span> <span class="json-str">"your_github_username"</span><span class="json-punct">,</span>
+  <span class="json-key">"filename"</span><span class="json-punct">:</span>    <span class="json-str">"my_garage_door_433.sub"</span>
+<span class="json-punct">}</span></pre>
+    </div>
+
+    <div class="submit-cta">
+      <a class="btn-primary" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener">
+        ⬆️ Open a Pull Request
+      </a>
+      <span class="note">All signal types welcome — garage doors, car keys, intercoms, weather stations, or anything custom.</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>
+    Built by the community for the community &mdash;
+    <a href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">flipper-signal-db</a>
+    on GitHub.
+    Use responsibly and only on frequencies you are legally permitted to transmit on.
+  </p>
+</footer>
+
+<script>
+  const CATEGORY_LABELS = {
+    garage_doors:     'Garage Doors',
+    car_keys:         'Car Keys',
+    intercoms:        'Intercoms',
+    weather_stations: 'Weather Stations',
+    custom:           'Custom',
+  };
+
+  let allSignals = [];
+  let activeCategory = 'all';
+  let searchQuery = '';
+
+  // ── Fetch signals ──
+  async function init() {
+    try {
+      const res = await fetch('signals.json');
+      allSignals = await res.json();
+      document.getElementById('signal-count-badge').textContent =
+        `${allSignals.length} signal${allSignals.length !== 1 ? 's' : ''}`;
+      render();
+    } catch (e) {
+      document.getElementById('grid').innerHTML =
+        '<div class="empty"><div class="empty-icon">⚠️</div><h3>Could not load signals</h3><p>Make sure you are serving this page over HTTP, not file://</p></div>';
+    }
+  }
+
+  // ── Filter logic ──
+  function filtered() {
+    const q = searchQuery.toLowerCase();
+    return allSignals.filter(s => {
+      const matchCat = activeCategory === 'all' || s.category === activeCategory;
+      const matchQ   = !q ||
+        s.name.toLowerCase().includes(q) ||
+        s.frequency.toLowerCase().includes(q) ||
+        s.protocol.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q) ||
+        s.contributor.toLowerCase().includes(q);
+      return matchCat && matchQ;
+    });
+  }
+
+  // ── Render ──
+  function render() {
+    const signals = filtered();
+    const grid    = document.getElementById('grid');
+    const count   = document.getElementById('results-count');
+
+    count.innerHTML = `Showing <strong>${signals.length}</strong> of <strong>${allSignals.length}</strong> signals`;
+
+    if (signals.length === 0) {
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">📭</div>
+          <h3>No signals found</h3>
+          <p>Try a different search term or category filter.</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = signals.map(s => cardHTML(s)).join('');
+  }
+
+  function initials(name) {
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  function cardHTML(s) {
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">${esc(s.name)}</div>
+          <span class="cat-badge ${esc(s.category)}">${esc(CATEGORY_LABELS[s.category] || s.category)}</span>
+        </div>
+        <p class="card-desc">${esc(s.description)}</p>
+        <div class="card-meta">
+          <div class="meta-item">
+            <div class="meta-label">Frequency</div>
+            <div class="meta-value">${esc(s.frequency)}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Protocol</div>
+            <div class="meta-value">${esc(s.protocol)}</div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="contributor">
+            <div class="contributor-avatar">${esc(initials(s.contributor))}</div>
+            ${esc(s.contributor)}
+          </div>
+          <a class="btn-download" href="signals/${esc(s.filename)}" download="${esc(s.filename)}">
+            ⬇ Download .sub
+          </a>
+        </div>
+      </div>`;
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Events ──
+  document.getElementById('search').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.cat;
+      render();
+    });
+  });
+
+  init();
+</script>
+</body>
+</html>
