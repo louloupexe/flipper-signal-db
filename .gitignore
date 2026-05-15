@@ -1,0 +1,16 @@
+# Web / Static files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Environment
+.env
+
+# Node (if used later)
+node_modules/
+
+# Logs
+*.log
