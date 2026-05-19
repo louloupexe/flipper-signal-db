@@ -55,6 +55,7 @@ Each signal is an object in the top-level array:
   "protocol":    "OOK",
   "description": "Common single-channel remote at 433 MHz.",
   "category":    "garage_doors",
+  "region":      "eu",
   "contributor": "your_github_username",
   "filename":    "garage_door_433.sub"
 }
@@ -67,8 +68,17 @@ Each signal is an object in the top-level array:
 | `protocol` | e.g. `"OOK"`, `"Princeton"`, `"RAW"`, `"Acurite-609TXC"` |
 | `description` | One or two sentences about what was captured and where |
 | `category` | One of the category keys above |
+| `region` | `"eu"` (433/868 MHz), `"us"` (315/433/915 MHz), or `"global"` |
 | `contributor` | Your GitHub username |
 | `filename` | Basename of the `.sub` file inside `signals/` |
+
+### Regions & Frequencies
+
+| Region | Common Frequencies | Key |
+|---|---|---|
+| 🇪🇺 Europe | 433.92 MHz, 868.35 MHz | `eu` |
+| 🇺🇸 North America | 315 MHz, 433.92 MHz, 915 MHz | `us` |
+| 📡 Global | Works in both regions | `global` |
 
 ---
 

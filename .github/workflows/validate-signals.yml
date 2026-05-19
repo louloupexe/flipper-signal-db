@@ -25,8 +25,9 @@ jobs:
           python3 << 'EOF'
           import json, sys, os
 
-          REQUIRED   = ['name', 'frequency', 'protocol', 'description', 'category', 'contributor', 'filename']
+          REQUIRED   = ['name', 'frequency', 'protocol', 'description', 'category', 'region', 'contributor', 'filename']
           CATEGORIES = ['garage_doors', 'car_keys', 'intercoms', 'weather_stations', 'custom']
+          REGIONS    = ['eu', 'us', 'global']
 
           try:
               with open('signals.json', encoding='utf-8') as f:
@@ -49,6 +50,9 @@ jobs:
               cat = s.get('category', '')
               if cat not in CATEGORIES:
                   errors.append(f'  [{label}] invalid category "{cat}" — must be one of {CATEGORIES}')
+              region = s.get('region', '')
+              if region not in REGIONS:
+                  errors.append(f'  [{label}] invalid region "{region}" — must be one of {REGIONS}')
               fname = s.get('filename', '')
               if fname and not os.path.exists(os.path.join('signals', fname)):
                   errors.append(f'  [{label}] file not found: signals/{fname}')

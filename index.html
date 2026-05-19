@@ -297,6 +297,31 @@
       position: absolute; height: 100%; background: var(--accent); border-radius: 2px;
     }
 
+    /* Region filter */
+    .region-wrap { display: flex; align-items: center; gap: 6px; }
+    .region-label { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+    .region-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 11px; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted); font-size: .8rem;
+      cursor: pointer; transition: all .18s; white-space: nowrap;
+    }
+    .region-btn:hover { border-color: var(--border2); color: var(--text); }
+    .region-btn.active { border-color: transparent; font-weight: 700; color: #0b0d12; }
+    .region-btn[data-region="all"].active  { background: var(--text); color: var(--bg); }
+    .region-btn[data-region="eu"].active   { background: #4fa3e0; }
+    .region-btn[data-region="us"].active   { background: #ff5f5f; }
+    .region-btn[data-region="global"].active { background: var(--green); }
+
+    .region-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: .68rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 20px; margin-left: 4px;
+    }
+    .region-badge.eu     { background: rgba(79,163,224,.15); color: #4fa3e0; }
+    .region-badge.us     { background: rgba(255,95,95,.15);  color: #ff5f5f; }
+    .region-badge.global { background: rgba(61,220,132,.15); color: var(--green); }
+
     /* Favorites toggle */
     .fav-toggle {
       display: flex; align-items: center; gap: 6px;
@@ -629,6 +654,13 @@
 <div class="toolbar">
   <span class="results-info" id="results-info"></span>
   <div class="toolbar-right">
+    <div class="region-wrap">
+      <span class="region-label">Region:</span>
+      <button class="region-btn active" data-region="all">🌐 All</button>
+      <button class="region-btn" data-region="eu">🇪🇺 EU</button>
+      <button class="region-btn" data-region="us">🇺🇸 US</button>
+      <button class="region-btn" data-region="global">📡 Global</button>
+    </div>
     <div class="freq-wrap">
       <span class="freq-label">Freq: <strong id="freq-display">All</strong></span>
       <div class="dual-range" id="dual-range">
@@ -701,6 +733,15 @@
         <div class="form-group">
           <label>Protocol (auto-detected)</label>
           <input type="text" id="f-protocol" placeholder="e.g. OOK, RAW, Princeton" />
+        </div>
+        <div class="form-group">
+          <label>Region *</label>
+          <select id="f-region">
+            <option value="">— Select region —</option>
+            <option value="eu">🇪🇺 EU (433 / 868 MHz)</option>
+            <option value="us">🇺🇸 US (315 / 433 / 915 MHz)</option>
+            <option value="global">📡 Global (works everywhere)</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Your GitHub Username *</label>
@@ -781,12 +822,13 @@
 <script>
   /* ── Constants ── */
   const CATS = { garage_doors:'Garage Doors', car_keys:'Car Keys', intercoms:'Intercoms', weather_stations:'Weather Stations', custom:'Custom' };
+  const REGIONS = { eu:'🇪🇺 EU', us:'🇺🇸 US', global:'📡 Global' };
   const COLORS = { garage_doors:'#3ddc84', car_keys:'#4fa3e0', intercoms:'#9b6dff', weather_stations:'#2dd4bf', custom:'#f7c948' };
   const AV_COLORS = ['#f7931e','#ff5f1f','#3ddc84','#4fa3e0','#9b6dff','#2dd4bf','#f7c948','#ff5f5f'];
 
   /* ── State ── */
   let allSignals = [], favorites = new Set(), showFavOnly = false;
-  let activeCategory = 'all', searchQuery = '', sortMode = 'default';
+  let activeCategory = 'all', activeRegion = 'all', searchQuery = '', sortMode = 'default';
   let freqMin = 0, freqMax = 9999, sliderMin = 0, sliderMax = 9999;
   let currentModal = null;
 
@@ -912,6 +954,7 @@
     const q = searchQuery.toLowerCase();
     let list = allSignals.filter(s => {
       if (activeCategory !== 'all' && s.category !== activeCategory) return false;
+      if (activeRegion !== 'all' && s.region !== activeRegion) return false;
       if (showFavOnly && !favorites.has(s.filename)) return false;
       const f = parseFreq(s.frequency);
       if (f && (f < freqMin || f > freqMax)) return false;
@@ -972,6 +1015,7 @@
           <div class="card-title">${esc(s.name)}</div>
           <div class="card-top-right">
             <button class="fav-btn${isFav?' active':''}" onclick="toggleFavorite('${esc(s.filename)}',event)" title="${isFav?'Remove from':'Add to'} favorites">${isFav?'⭐':'☆'}</button>
+            ${s.region ? `<span class="region-badge ${esc(s.region)}">${REGIONS[s.region]||s.region}</span>` : ''}
             <span class="cat-chip ${esc(s.category)}">${esc(CATS[s.category]||s.category)}</span>
           </div>
         </div>
@@ -1011,7 +1055,8 @@
 
     document.getElementById('modal-meta').innerHTML = [
       ['Frequency', s.frequency], ['Protocol', s.protocol],
-      ['Category', CATS[s.category]||s.category], ['File', s.filename]
+      ['Category', CATS[s.category]||s.category], ['Region', REGIONS[s.region]||s.region||'—'],
+      ['File', s.filename]
     ].map(([l,v]) => `<div class="modal-meta-item">
       <div class="modal-meta-label">${l}</div>
       <div class="modal-meta-value" style="color:${l==='Frequency'?color:'var(--text)'}">${esc(v)}</div>
@@ -1087,6 +1132,15 @@
     sortMode = e.target.value; render();
   });
 
+  document.querySelectorAll('.region-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRegion = btn.dataset.region;
+      render();
+    });
+  });
+
   document.querySelectorAll('.submit-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.submit-tab').forEach(t=>t.classList.remove('active'));
@@ -1139,12 +1193,13 @@
     const protocol=document.getElementById('f-protocol').value.trim();
     const description=document.getElementById('f-description').value.trim();
     const category=document.getElementById('f-category').value;
+    const region=document.getElementById('f-region').value;
     const contributor=document.getElementById('f-contributor').value.trim();
     const filename=document.getElementById('f-filename').value.trim();
-    if (!name||!category||!contributor||!description) {
-      toast('Please fill in Name, Category, Contributor and Description','error'); return;
+    if (!name||!category||!region||!contributor||!description) {
+      toast('Please fill in Name, Category, Region, Contributor and Description','error'); return;
     }
-    const entry={name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,contributor,filename:filename||'my_signal.sub'};
+    const entry={name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,region,contributor,filename:filename||'my_signal.sub'};
     document.getElementById('output-pre').textContent = JSON.stringify(entry,null,2);
     document.getElementById('ns-fn').textContent = entry.filename;
     document.getElementById('output-block').classList.add('visible');

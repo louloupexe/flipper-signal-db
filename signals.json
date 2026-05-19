@@ -5,6 +5,7 @@
     "protocol": "OOK",
     "description": "Common rolling-code garage door opener signal captured at 433.92 MHz. Works with many generic single-channel remotes.",
     "category": "garage_doors",
+    "region": "eu",
     "contributor": "flipper_fan_42",
     "filename": "garage_door_433.sub"
   },
@@ -14,6 +15,7 @@
     "protocol": "OOK",
     "description": "Generic North American car key fob signal at 315 MHz. Recorded from a common aftermarket remote.",
     "category": "car_keys",
+    "region": "us",
     "contributor": "rf_hunter",
     "filename": "car_keyfob_315.sub"
   },
@@ -23,6 +25,7 @@
     "protocol": "Princeton",
     "description": "Door bell trigger for a common apartment intercom panel. Press-to-open signal recorded at the entry unit.",
     "category": "intercoms",
+    "region": "eu",
     "contributor": "signal_collector",
     "filename": "intercom_bell_433.sub"
   },
@@ -32,6 +35,7 @@
     "protocol": "Acurite-609TXC",
     "description": "Temperature and humidity broadcast from an Acurite 609TXC outdoor weather sensor. Transmits every 16 seconds.",
     "category": "weather_stations",
+    "region": "us",
     "contributor": "iot_tinkerer",
     "filename": "acurite_weather_433.sub"
   },
@@ -41,6 +45,7 @@
     "protocol": "RAW",
     "description": "Custom raw beacon signal captured on the European ISM band at 868 MHz. Purpose unknown — shared for analysis.",
     "category": "custom",
+    "region": "eu",
     "contributor": "wave_watcher",
     "filename": "custom_ism_868.sub"
   }
