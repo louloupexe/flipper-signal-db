@@ -1,0 +1,54 @@
+name: "📡 New Signal Request"
+description: "Request a specific signal to be added to the database"
+title: "[Signal Request] "
+labels: ["signal-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to request a signal you'd like to see in the database.
+        If you already have the `.sub` file, please open a Pull Request instead!
+
+  - type: input
+    id: signal-name
+    attributes:
+      label: Signal name
+      placeholder: "e.g. Somfy RTS Roller Shutter 433MHz"
+    validations:
+      required: true
+
+  - type: input
+    id: frequency
+    attributes:
+      label: Frequency
+      placeholder: "e.g. 433.92 MHz"
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Garage Doors
+        - Car Keys
+        - Intercoms
+        - Weather Stations
+        - Custom / Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "What device does this signal come from? What does it do?"
+      placeholder: "Rolling shutter remote for Somfy RTS system, common in European homes."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: have-flipper
+    attributes:
+      label: Do you have a Flipper Zero to capture it?
+      options:
+        - label: "Yes, I can capture it myself"
+        - label: "No, I need someone else to capture it"

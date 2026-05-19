@@ -1,0 +1,86 @@
+name: Validate signals.json
+
+on:
+  pull_request:
+    paths:
+      - 'signals.json'
+      - 'signals/**'
+  push:
+    branches: [main]
+    paths:
+      - 'signals.json'
+      - 'signals/**'
+
+jobs:
+  validate:
+    name: Validate signal entries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate signals.json
+        run: |
+          python3 << 'EOF'
+          import json, sys, os
+
+          REQUIRED   = ['name', 'frequency', 'protocol', 'description', 'category', 'contributor', 'filename']
+          CATEGORIES = ['garage_doors', 'car_keys', 'intercoms', 'weather_stations', 'custom']
+
+          try:
+              with open('signals.json', encoding='utf-8') as f:
+                  signals = json.load(f)
+          except json.JSONDecodeError as e:
+              print(f'❌ signals.json is not valid JSON: {e}')
+              sys.exit(1)
+
+          if not isinstance(signals, list):
+              print('❌ signals.json must be a JSON array')
+              sys.exit(1)
+
+          errors = []
+          for i, s in enumerate(signals):
+              label = s.get('name', f'entry #{i}')
+              for field in REQUIRED:
+                  val = s.get(field, '')
+                  if not isinstance(val, str) or not val.strip():
+                      errors.append(f'  [{label}] missing or empty field: "{field}"')
+              cat = s.get('category', '')
+              if cat not in CATEGORIES:
+                  errors.append(f'  [{label}] invalid category "{cat}" — must be one of {CATEGORIES}')
+              fname = s.get('filename', '')
+              if fname and not os.path.exists(os.path.join('signals', fname)):
+                  errors.append(f'  [{label}] file not found: signals/{fname}')
+
+          if errors:
+              print(f'❌ Validation failed with {len(errors)} error(s):\n')
+              print('\n'.join(errors))
+              sys.exit(1)
+
+          print(f'✅ All {len(signals)} signal(s) passed validation.')
+          EOF
+
+      - name: Check for duplicate filenames
+        run: |
+          python3 << 'EOF'
+          import json, sys
+          from collections import Counter
+
+          with open('signals.json') as f:
+              signals = json.load(f)
+
+          filenames = [s.get('filename', '') for s in signals]
+          dupes = [fn for fn, count in Counter(filenames).items() if count > 1 and fn]
+          if dupes:
+              print(f'❌ Duplicate filenames found: {dupes}')
+              sys.exit(1)
+
+          names = [s.get('name', '') for s in signals]
+          dupes = [n for n, count in Counter(names).items() if count > 1 and n]
+          if dupes:
+              print(f'❌ Duplicate signal names found: {dupes}')
+              sys.exit(1)
+
+          print('✅ No duplicates found.')
+          EOF
