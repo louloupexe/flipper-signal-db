@@ -508,6 +508,37 @@
     .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
     #output-pre { padding: 16px 18px; font-family: 'Cascadia Code','Fira Code',monospace; font-size: .82rem; line-height: 1.7; color: var(--text); white-space: pre; overflow-x: auto; }
 
+    .submit-steps-wrap { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px 18px; }
+    .submit-step-card {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 16px;
+    }
+    .done-card { opacity: .7; }
+    .submit-step-num {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; font-weight: 800; color: #0b0d12;
+    }
+    .submit-step-body { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .submit-step-title { font-size: .92rem; font-weight: 700; }
+    .submit-step-desc { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+    .submit-step-desc code { background: rgba(247,147,30,.12); color: var(--accent); border-radius: 4px; padding: 1px 5px; font-size: .78rem; }
+    .submit-step-btn {
+      display: inline-flex; align-items: center; gap: 7px; margin-top: 6px;
+      padding: 9px 16px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b0d12; font-weight: 700; font-size: .83rem;
+      border-radius: var(--radius-sm); text-decoration: none; transition: opacity .18s;
+      align-self: flex-start;
+    }
+    .submit-step-btn:hover { opacity: .88; }
+    .submit-step-btn.secondary {
+      background: var(--surface3); color: var(--text);
+      border: 1px solid var(--border2);
+    }
+    .submit-step-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+
     .next-steps { margin: 0 18px 18px; background: rgba(247,147,30,.07); border: 1px solid rgba(247,147,30,.2); border-radius: var(--radius-sm); padding: 13px 16px; font-size: .82rem; color: var(--muted); line-height: 1.65; }
     .next-steps strong { color: var(--accent); }
     .next-steps code { background: rgba(247,147,30,.12); color: var(--accent); border-radius: 4px; padding: 1px 5px; font-size: .8rem; }
@@ -765,13 +796,34 @@
           <button class="btn-copy" onclick="copyOutput()">📋 Copy</button>
         </div>
         <pre id="output-pre"></pre>
-        <div class="next-steps">
-          <strong>Next steps:</strong><br>
-          1. Fork <a href="https://github.com/og34/flipper-signal-db" target="_blank" style="color:var(--accent)">og34/flipper-signal-db</a> on GitHub<br>
-          2. Upload <code id="ns-fn"></code> into the <code>signals/</code> folder<br>
-          3. Paste the JSON above into <code>signals.json</code><br>
-          4. Open a Pull Request — CI validates automatically 🚀<br>
-          <a class="pr-btn" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener">⬆️ Open Pull Request</a>
+        <div class="submit-steps-wrap">
+          <div class="submit-step-card">
+            <div class="submit-step-num">1</div>
+            <div class="submit-step-body">
+              <div class="submit-step-title">Paste into signals.json</div>
+              <div class="submit-step-desc">JSON was copied to your clipboard. Click below — GitHub opens the file editor directly. Paste at the end of the array, then click <strong>Propose changes</strong>.</div>
+              <a class="submit-step-btn" id="btn-open-json" href="https://github.com/og34/flipper-signal-db/edit/main/signals.json" target="_blank" rel="noopener" onclick="copyOutput()">
+                📝 Open signals.json on GitHub
+              </a>
+            </div>
+          </div>
+          <div class="submit-step-card">
+            <div class="submit-step-num">2</div>
+            <div class="submit-step-body">
+              <div class="submit-step-title">Upload your .sub file</div>
+              <div class="submit-step-desc">Click below — GitHub opens the <code>signals/</code> folder. Use <strong>Add file → Upload files</strong> to upload your <code id="ns-fn"></code> file.</div>
+              <a class="submit-step-btn secondary" id="btn-open-signals" href="https://github.com/og34/flipper-signal-db/upload/main/signals" target="_blank" rel="noopener">
+                📂 Open signals/ folder on GitHub
+              </a>
+            </div>
+          </div>
+          <div class="submit-step-card done-card">
+            <div class="submit-step-num">3</div>
+            <div class="submit-step-body">
+              <div class="submit-step-title">GitHub creates the PR for you</div>
+              <div class="submit-step-desc">After both steps, GitHub automatically asks you to <strong>open a Pull Request</strong>. CI validates your entry — if everything is green, a maintainer will merge it. 🚀</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1200,11 +1252,13 @@
       toast('Please fill in Name, Category, Region, Contributor and Description','error'); return;
     }
     const entry={name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,region,contributor,filename:filename||'my_signal.sub'};
-    document.getElementById('output-pre').textContent = JSON.stringify(entry,null,2);
+    const json = JSON.stringify(entry,null,2);
+    document.getElementById('output-pre').textContent = json;
     document.getElementById('ns-fn').textContent = entry.filename;
     document.getElementById('output-block').classList.add('visible');
     document.getElementById('output-block').scrollIntoView({behavior:'smooth',block:'nearest'});
-    toast('JSON entry generated!','success');
+    navigator.clipboard.writeText(json).catch(()=>{});
+    toast('JSON generated & copied to clipboard — follow the steps below','success');
   }
 
   function copyOutput() { copyText(document.getElementById('output-pre').textContent,'JSON copied to clipboard!'); }
