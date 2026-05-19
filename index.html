@@ -3,28 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flipper Signal DB</title>
+  <title>Flipper Signal DB — Community Sub-GHz Library</title>
   <style>
     :root {
-      --bg: #0d0f14;
-      --surface: #161b24;
-      --surface2: #1e2535;
-      --border: #2a3347;
-      --accent: #f79324;
+      --bg: #0b0d12;
+      --surface: #13161f;
+      --surface2: #1a1f2e;
+      --surface3: #222840;
+      --border: #252d42;
+      --border2: #2e3a55;
+      --accent: #f7931e;
       --accent2: #ff5f1f;
-      --text: #e8eaf0;
-      --muted: #7a8499;
+      --accent-glow: rgba(247,147,30,0.18);
+      --text: #e8eaf2;
+      --muted: #6b7694;
+      --muted2: #4a5370;
       --green: #3ddc84;
       --blue: #4fa3e0;
       --purple: #9b6dff;
       --red: #ff5f5f;
       --yellow: #f7c948;
       --teal: #2dd4bf;
-      --radius: 12px;
-      --radius-sm: 8px;
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.6);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -32,26 +40,68 @@
       color: var(--text);
       min-height: 100vh;
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Header ── */
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    /* ─── Toast ─── */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--accent);
+      color: var(--text);
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      animation: toastIn 0.25s ease forwards;
+      pointer-events: auto;
+    }
+
+    .toast.success { border-left-color: var(--green); }
+    .toast.error   { border-left-color: var(--red); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateY(12px) scale(0.95); }
+    }
+
+    /* ─── Header ─── */
     header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
       position: sticky;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(8px);
+      z-index: 200;
+      background: rgba(11,13,18,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
     }
 
     .header-inner {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
       display: flex;
       align-items: center;
       gap: 16px;
-      height: 64px;
     }
 
     .logo {
@@ -59,648 +109,1079 @@
       align-items: center;
       gap: 10px;
       text-decoration: none;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
       flex-shrink: 0;
     }
 
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
     .logo-text {
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: var(--text);
       letter-spacing: -0.3px;
     }
 
-    .logo-text span {
+    .logo-text em {
+      font-style: normal;
       color: var(--accent);
+    }
+
+    .header-search {
+      flex: 1;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .header-search input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .header-search input::placeholder { color: var(--muted); }
+    .header-search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .header-search .si {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+      pointer-events: none;
     }
 
     .header-right {
       margin-left: auto;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .badge {
+    .pill {
       background: var(--surface2);
       border: 1px solid var(--border);
       color: var(--muted);
       font-size: 0.78rem;
-      padding: 4px 10px;
+      font-weight: 600;
+      padding: 4px 11px;
       border-radius: 20px;
     }
 
-    .btn-outline {
+    .pill span { color: var(--accent); }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s;
+    }
+    .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+
+    .btn-accent {
       display: flex;
       align-items: center;
       gap: 6px;
       padding: 7px 14px;
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
       border-radius: var(--radius-sm);
-      background: transparent;
-      color: var(--text);
-      font-size: 0.85rem;
+      color: #0b0d12;
+      font-size: 0.82rem;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
+      transition: opacity 0.2s, transform 0.15s;
     }
+    .btn-accent:hover { opacity: 0.88; transform: scale(1.02); }
 
-    .btn-outline:hover {
-      border-color: var(--accent);
-      background: rgba(247,147,36,0.08);
-    }
-
-    /* ── Hero ── */
+    /* ─── Hero ─── */
     .hero {
-      background: linear-gradient(160deg, #101520 0%, #0d0f14 60%);
-      border-bottom: 1px solid var(--border);
-      padding: 56px 24px 48px;
+      position: relative;
+      overflow: hidden;
+      padding: 72px 24px 60px;
       text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(247,147,30,0.08) 0%, transparent 70%);
+    }
+
+    .hero-wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      opacity: 0.06;
     }
 
     .hero h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 12px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
     }
 
-    .hero h1 .highlight {
+    .hero h1 .grad {
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .hero p {
+    .hero-sub {
       color: var(--muted);
       font-size: 1.05rem;
-      max-width: 560px;
-      margin: 0 auto 32px;
+      max-width: 520px;
+      margin: 0 auto 36px;
     }
 
-    /* ── Search ── */
-    .search-wrap {
-      max-width: 600px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 1rem;
-      pointer-events: none;
-    }
-
-    #search {
-      width: 100%;
-      padding: 14px 16px 14px 44px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    #search::placeholder { color: var(--muted); }
-
-    #search:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(247,147,36,0.15);
-    }
-
-    /* ── Main layout ── */
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 24px 80px;
-    }
-
-    /* ── Filters ── */
-    .filters-row {
+    .hero-badges {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 28px;
     }
 
-    .filter-label {
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-right: 4px;
-    }
-
-    .filter-btn {
+    .hero-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
       background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 13px;
+      font-size: 0.8rem;
       color: var(--muted);
-      font-size: 0.83rem;
-      cursor: pointer;
-      transition: all 0.18s;
-      white-space: nowrap;
     }
 
-    .filter-btn:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
-
-    .filter-btn.active {
-      border-color: transparent;
-      color: #0d0f14;
-      font-weight: 600;
-    }
-
-    .filter-btn .dot {
-      width: 8px;
-      height: 8px;
+    .hero-badge .dot {
+      width: 7px; height: 7px;
       border-radius: 50%;
     }
 
-    /* category colors */
-    .cat-all       .dot { background: var(--text); }
-    .cat-all.active      { background: var(--text); }
-    .cat-garage    .dot { background: var(--green); }
-    .cat-garage.active   { background: var(--green); }
-    .cat-car       .dot { background: var(--blue); }
-    .cat-car.active      { background: var(--blue); }
-    .cat-intercom  .dot { background: var(--purple); }
-    .cat-intercom.active { background: var(--purple); }
-    .cat-weather   .dot { background: var(--teal); }
-    .cat-weather.active  { background: var(--teal); }
-    .cat-custom    .dot { background: var(--yellow); }
-    .cat-custom.active   { background: var(--yellow); }
-
-    /* ── Results bar ── */
-    .results-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .results-count {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .results-count strong {
-      color: var(--text);
-    }
-
-    /* ── Grid ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-    }
-
-    /* ── Card ── */
-    .card {
+    /* ─── Stats bar ─── */
+    .stats-bar {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+      gap: 0;
+    }
+
+    .stat-item {
+      flex: 1;
+      min-width: 120px;
+      padding: 14px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      align-items: center;
+      gap: 3px;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.18s;
     }
 
-    .card:hover {
-      border-color: rgba(247,147,36,0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    .stat-item:last-child { border-right: none; }
+    .stat-item:hover { background: var(--surface2); }
+    .stat-item.active { background: var(--surface2); }
+
+    .stat-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .cat-badge {
-      flex-shrink: 0;
+    .stat-label {
       font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 20px;
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
 
-    .cat-badge.garage_doors    { background: rgba(61,220,132,0.15); color: var(--green); }
-    .cat-badge.car_keys        { background: rgba(79,163,224,0.15); color: var(--blue); }
-    .cat-badge.intercoms       { background: rgba(155,109,255,0.15); color: var(--purple); }
-    .cat-badge.weather_stations{ background: rgba(45,212,191,0.15); color: var(--teal); }
-    .cat-badge.custom          { background: rgba(247,201,72,0.15); color: var(--yellow); }
+    .stat-item[data-cat="all"]              .stat-num { color: var(--text); }
+    .stat-item[data-cat="garage_doors"]     .stat-num { color: var(--green); }
+    .stat-item[data-cat="car_keys"]         .stat-num { color: var(--blue); }
+    .stat-item[data-cat="intercoms"]        .stat-num { color: var(--purple); }
+    .stat-item[data-cat="weather_stations"] .stat-num { color: var(--teal); }
+    .stat-item[data-cat="custom"]           .stat-num { color: var(--yellow); }
 
-    .card-desc {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.55;
+    /* ─── Toolbar ─── */
+    .toolbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .card-meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .results-info {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .results-info strong { color: var(--text); }
+
+    .sort-wrap {
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
 
-    .meta-item {
+    .sort-label { color: var(--muted); font-size: 0.82rem; }
+
+    select#sort-select {
       background: var(--surface2);
+      border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 8px 10px;
+      color: var(--text);
+      font-size: 0.82rem;
+      padding: 6px 10px;
+      outline: none;
+      cursor: pointer;
     }
 
-    .meta-label {
+    select#sort-select:focus { border-color: var(--accent); }
+
+    /* ─── Grid ─── */
+    .grid-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 16px;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.18s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--border2);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card[data-cat="garage_doors"]::before     { background: var(--green); }
+    .card[data-cat="car_keys"]::before         { background: var(--blue); }
+    .card[data-cat="intercoms"]::before        { background: var(--purple); }
+    .card[data-cat="weather_stations"]::before { background: var(--teal); }
+    .card[data-cat="custom"]::before           { background: var(--yellow); }
+
+    .card-wave {
+      width: 100%;
+      height: 48px;
+      opacity: 0.5;
+      display: block;
+    }
+
+    .card-body {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .cat-chip {
+      flex-shrink: 0;
       font-size: 0.68rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--muted);
-      margin-bottom: 2px;
+      padding: 3px 8px;
+      border-radius: 20px;
     }
 
-    .meta-value {
-      font-size: 0.85rem;
-      font-weight: 600;
+    .cat-chip.garage_doors     { background: rgba(61,220,132,0.12); color: var(--green); }
+    .cat-chip.car_keys         { background: rgba(79,163,224,0.12); color: var(--blue); }
+    .cat-chip.intercoms        { background: rgba(155,109,255,0.12); color: var(--purple); }
+    .cat-chip.weather_stations { background: rgba(45,212,191,0.12); color: var(--teal); }
+    .cat-chip.custom           { background: rgba(247,201,72,0.12); color: var(--yellow); }
+
+    .card-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .info-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: border-color 0.18s;
       color: var(--text);
-      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+    }
+
+    .info-pill:hover { border-color: var(--accent); }
+
+    .info-pill .pill-label {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: var(--muted);
+      font-size: 0.72rem;
     }
 
     .card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: auto;
+      padding: 12px 18px;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
     }
 
     .contributor {
       display: flex;
       align-items: center;
-      gap: 6px;
-      color: var(--muted);
-      font-size: 0.8rem;
+      gap: 7px;
     }
 
-    .contributor-avatar {
-      width: 22px;
-      height: 22px;
+    .avatar {
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
-      font-weight: 700;
+      font-size: 0.62rem;
+      font-weight: 800;
       color: #fff;
       flex-shrink: 0;
     }
 
-    .btn-download {
+    .contributor-name {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .btn-dl {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 14px;
+      padding: 7px 13px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #0d0f14;
+      color: #0b0d12;
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       border: none;
       border-radius: var(--radius-sm);
       cursor: pointer;
       text-decoration: none;
-      transition: opacity 0.2s, transform 0.15s;
+      transition: opacity 0.18s, transform 0.15s;
     }
 
-    .btn-download:hover {
-      opacity: 0.88;
-      transform: scale(1.03);
-    }
+    .btn-dl:hover { opacity: 0.85; transform: scale(1.03); }
 
-    /* ── Empty state ── */
+    /* ─── Empty ─── */
     .empty {
       grid-column: 1 / -1;
+      padding: 80px 24px;
       text-align: center;
-      padding: 64px 24px;
       color: var(--muted);
     }
 
-    .empty-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
+    .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+    .empty h3 { color: var(--text); font-size: 1.1rem; margin-bottom: 8px; }
+
+    /* ─── Submit Section ─── */
+    .submit-wrap {
+      max-width: 1280px;
+      margin: 56px auto 0;
+      padding: 0 24px 80px;
     }
 
-    .empty h3 { color: var(--text); margin-bottom: 8px; }
-
-    /* ── Submit section ── */
-    .submit-section {
+    .submit-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 40px;
-      margin-top: 56px;
+      overflow: hidden;
     }
 
-    .submit-section h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 8px;
+    .submit-header {
+      padding: 28px 32px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(247,147,30,0.06) 0%, transparent 60%);
       display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .submit-section > p {
-      color: var(--muted);
-      margin-bottom: 32px;
-      max-width: 640px;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .step {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-
-    .step-num {
-      width: 30px;
-      height: 30px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #0d0f14;
-      margin-bottom: 12px;
-    }
-
-    .step h3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .step p {
-      font-size: 0.83rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .step code {
-      background: rgba(247,147,36,0.12);
-      color: var(--accent);
-      border-radius: 4px;
-      padding: 1px 5px;
-      font-size: 0.82rem;
-    }
-
-    .json-preview {
-      background: #0a0c12;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      overflow-x: auto;
-      margin-bottom: 24px;
-    }
-
-    .json-preview pre {
-      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: var(--text);
-    }
-
-    .json-key   { color: var(--blue); }
-    .json-str   { color: var(--green); }
-    .json-punct { color: var(--muted); }
-
-    .submit-cta {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 22px;
+    .submit-header-left h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .submit-header-left p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      max-width: 480px;
+    }
+
+    .submit-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .submit-tab {
+      flex: 1;
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.18s;
+    }
+
+    .submit-tab:hover { color: var(--text); }
+    .submit-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-pane { display: none; padding: 28px 32px; }
+    .tab-pane.active { display: block; }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .drop-zone input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .drop-zone h3 { font-size: 1rem; margin-bottom: 6px; }
+    .drop-zone p { color: var(--muted); font-size: 0.83rem; }
+
+    .drop-zone.has-file {
+      border-style: solid;
+      border-color: var(--green);
+      background: rgba(61,220,132,0.06);
+    }
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    input[type=text],
+    select,
+    textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.88rem;
+      padding: 9px 12px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      font-family: inherit;
+    }
+
+    input[type=text]::placeholder,
+    textarea::placeholder { color: var(--muted2); }
+
+    input[type=text]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    select option { background: var(--surface2); }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-generate {
+      padding: 10px 22px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #0d0f14;
+      color: #0b0d12;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       border: none;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.18s;
     }
 
-    .btn-primary:hover { opacity: 0.88; }
+    .btn-generate:hover { opacity: 0.88; }
 
-    .note {
+    /* Output block */
+    .output-block {
+      display: none;
+      margin-top: 24px;
+      background: #080a0f;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .output-block.visible { display: block; }
+
+    .output-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .output-title {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .btn-copy {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
+
+    #output-pre {
+      padding: 18px 20px;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.83rem;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .next-steps {
+      margin-top: 16px;
+      background: rgba(247,147,30,0.07);
+      border: 1px solid rgba(247,147,30,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .next-steps strong { color: var(--accent); }
+
+    .next-steps .pr-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b0d12;
+      font-weight: 700;
+      font-size: 0.83rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: opacity 0.18s;
+    }
+
+    .next-steps .pr-btn:hover { opacity: 0.88; }
+
+    /* Manual tab */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .step-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #0b0d12;
+      margin-bottom: 10px;
+    }
+
+    .step-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 5px; }
+    .step-card p  { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .step-card code {
+      background: rgba(247,147,30,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.8rem;
+    }
+
+    .schema-block {
+      background: #080a0f;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .schema-block pre {
+      padding: 20px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+    .jk { color: var(--blue); }
+    .jv { color: var(--green); }
+    .jp { color: var(--muted); }
+
+    /* Guidelines */
+    .guidelines {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .guideline {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
       font-size: 0.82rem;
       color: var(--muted);
+      padding: 8px 0;
     }
 
-    /* ── Footer ── */
+    .guideline .gi { flex-shrink: 0; }
+
+    /* ─── Footer ─── */
     footer {
       border-top: 1px solid var(--border);
       padding: 24px;
       text-align: center;
       color: var(--muted);
-      font-size: 0.83rem;
+      font-size: 0.82rem;
     }
 
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
+    footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .header-search { display: none; }
+      .hero { padding: 48px 16px 40px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .submit-header { padding: 20px; }
+      .tab-pane { padding: 20px; }
+      .guidelines { grid-template-columns: 1fr; }
+      .stats-inner { gap: 0; }
+      .stat-item { min-width: 90px; padding: 12px 10px; }
+    }
 
-    @media (max-width: 600px) {
-      .hero { padding: 40px 16px 36px; }
-      main { padding: 24px 16px 60px; }
-      .submit-section { padding: 24px; }
-      .header-inner { gap: 10px; }
-      .badge { display: none; }
+    @media (max-width: 480px) {
+      .header-inner { padding: 0 16px; }
+      .grid-wrap, .toolbar, .submit-wrap { padding-left: 16px; padding-right: 16px; }
+      .hero-badges { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
+<div id="toast-container"></div>
+
+<!-- ─── Header ─── -->
 <header>
   <div class="header-inner">
     <a class="logo" href="#">
       <div class="logo-icon">📡</div>
-      <span class="logo-text">Flipper <span>Signal DB</span></span>
+      <span class="logo-text">Flipper <em>Signal DB</em></span>
     </a>
+
+    <div class="header-search">
+      <span class="si">🔍</span>
+      <input type="search" id="search" placeholder="Search signals…" autocomplete="off" />
+    </div>
+
     <div class="header-right">
-      <span class="badge" id="signal-count-badge">Loading…</span>
-      <a class="btn-outline" href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      <span class="pill" id="header-count"><span>—</span> signals</span>
+      <a class="btn-ghost" href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
+      <a class="btn-accent" href="#submit">+ Submit Signal</a>
     </div>
   </div>
 </header>
 
-<!-- ── Hero ── -->
+<!-- ─── Hero ─── -->
 <section class="hero">
-  <h1>Community <span class="highlight">Flipper Zero</span><br>Signal Database</h1>
-  <p>Browse, download, and contribute Sub-GHz signal files recorded with the Flipper Zero. Open-source &amp; community-powered.</p>
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="search" id="search" placeholder="Search by name, frequency, protocol…" autocomplete="off" />
+  <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" fill="none">
+    <path d="M0 40 Q180 10 360 40 Q540 70 720 40 Q900 10 1080 40 Q1260 70 1440 40 L1440 80 L0 80 Z" fill="var(--accent)"/>
+  </svg>
+  <h1>Community<br><span class="grad">Flipper Zero</span> Signals</h1>
+  <p class="hero-sub">Browse, download and share Sub-GHz <code style="background:var(--surface2);padding:2px 6px;border-radius:5px;font-size:.9em">.sub</code> files captured with the Flipper Zero. 100% open-source.</p>
+  <div class="hero-badges">
+    <span class="hero-badge"><span class="dot" style="background:var(--green)"></span>Garage Doors</span>
+    <span class="hero-badge"><span class="dot" style="background:var(--blue)"></span>Car Keys</span>
+    <span class="hero-badge"><span class="dot" style="background:var(--purple)"></span>Intercoms</span>
+    <span class="hero-badge"><span class="dot" style="background:var(--teal)"></span>Weather Stations</span>
+    <span class="hero-badge"><span class="dot" style="background:var(--yellow)"></span>Custom</span>
   </div>
 </section>
 
-<!-- ── Main ── -->
-<main>
-
-  <!-- Filters -->
-  <div class="filters-row">
-    <span class="filter-label">Category:</span>
-    <button class="filter-btn cat-all active" data-cat="all">
-      <span class="dot"></span> All
-    </button>
-    <button class="filter-btn cat-garage" data-cat="garage_doors">
-      <span class="dot"></span> Garage Doors
-    </button>
-    <button class="filter-btn cat-car" data-cat="car_keys">
-      <span class="dot"></span> Car Keys
-    </button>
-    <button class="filter-btn cat-intercom" data-cat="intercoms">
-      <span class="dot"></span> Intercoms
-    </button>
-    <button class="filter-btn cat-weather" data-cat="weather_stations">
-      <span class="dot"></span> Weather Stations
-    </button>
-    <button class="filter-btn cat-custom" data-cat="custom">
-      <span class="dot"></span> Custom
-    </button>
+<!-- ─── Stats bar ─── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item active" data-cat="all">
+      <span class="stat-num" id="s-all">—</span>
+      <span class="stat-label">All</span>
+    </div>
+    <div class="stat-item" data-cat="garage_doors">
+      <span class="stat-num" id="s-garage_doors">—</span>
+      <span class="stat-label">Garage Doors</span>
+    </div>
+    <div class="stat-item" data-cat="car_keys">
+      <span class="stat-num" id="s-car_keys">—</span>
+      <span class="stat-label">Car Keys</span>
+    </div>
+    <div class="stat-item" data-cat="intercoms">
+      <span class="stat-num" id="s-intercoms">—</span>
+      <span class="stat-label">Intercoms</span>
+    </div>
+    <div class="stat-item" data-cat="weather_stations">
+      <span class="stat-num" id="s-weather_stations">—</span>
+      <span class="stat-label">Weather</span>
+    </div>
+    <div class="stat-item" data-cat="custom">
+      <span class="stat-num" id="s-custom">—</span>
+      <span class="stat-label">Custom</span>
+    </div>
   </div>
+</div>
 
-  <!-- Results bar -->
-  <div class="results-bar">
-    <span class="results-count" id="results-count"></span>
+<!-- ─── Toolbar ─── -->
+<div class="toolbar">
+  <span class="results-info" id="results-info"></span>
+  <div class="sort-wrap">
+    <span class="sort-label">Sort:</span>
+    <select id="sort-select">
+      <option value="default">Default</option>
+      <option value="name-az">Name A–Z</option>
+      <option value="name-za">Name Z–A</option>
+      <option value="freq-asc">Frequency ↑</option>
+      <option value="freq-desc">Frequency ↓</option>
+    </select>
   </div>
+</div>
 
-  <!-- Grid -->
+<!-- ─── Grid ─── -->
+<div class="grid-wrap">
   <div class="grid" id="grid"></div>
+</div>
 
-  <!-- Submit section -->
-  <section class="submit-section" id="submit">
-    <h2>📬 Submit a Signal</h2>
-    <p>Have a signal captured on your Flipper Zero? Share it with the community by opening a Pull Request on GitHub. It only takes a few minutes.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Fork the repo</h3>
-        <p>Click <strong>Fork</strong> on GitHub to get your own copy of <code>flipper-signal-db</code>.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Add your .sub file</h3>
-        <p>Copy your Flipper <code>.sub</code> file into the <code>signals/</code> folder. Use a descriptive filename like <code>my_gate_433.sub</code>.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Update signals.json</h3>
-        <p>Add a new entry to <code>signals.json</code> with all fields filled in (see format below).</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h3>Open a Pull Request</h3>
-        <p>Submit a PR against <code>main</code>. A maintainer will review and merge it within a few days.</p>
+<!-- ─── Submit Section ─── -->
+<div class="submit-wrap" id="submit">
+  <div class="submit-card">
+    <div class="submit-header">
+      <div class="submit-header-left">
+        <h2>📬 Submit a Signal</h2>
+        <p>Got a captured signal? Add it to the database in minutes. Drop your <code style="background:var(--surface3);padding:1px 5px;border-radius:4px">.sub</code> file below and we'll auto-fill the metadata for you.</p>
       </div>
     </div>
 
-    <div class="json-preview">
-      <pre><span class="json-punct">{</span>
-  <span class="json-key">"name"</span><span class="json-punct">:</span>        <span class="json-str">"My Garage Door 433MHz"</span><span class="json-punct">,</span>
-  <span class="json-key">"frequency"</span><span class="json-punct">:</span>   <span class="json-str">"433.92 MHz"</span><span class="json-punct">,</span>
-  <span class="json-key">"protocol"</span><span class="json-punct">:</span>    <span class="json-str">"OOK"</span><span class="json-punct">,</span>
-  <span class="json-key">"description"</span><span class="json-punct">:</span> <span class="json-str">"Single-channel remote for a XYZ brand gate opener."</span><span class="json-punct">,</span>
-  <span class="json-key">"category"</span><span class="json-punct">:</span>    <span class="json-str">"garage_doors"</span><span class="json-punct">,</span>
-  <span class="json-key">"contributor"</span><span class="json-punct">:</span> <span class="json-str">"your_github_username"</span><span class="json-punct">,</span>
-  <span class="json-key">"filename"</span><span class="json-punct">:</span>    <span class="json-str">"my_garage_door_433.sub"</span>
-<span class="json-punct">}</span></pre>
+    <div class="submit-tabs">
+      <div class="submit-tab active" data-tab="guided">✨ Guided (Easy)</div>
+      <div class="submit-tab" data-tab="manual">📋 Manual (GitHub PR)</div>
     </div>
 
-    <div class="submit-cta">
-      <a class="btn-primary" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener">
-        ⬆️ Open a Pull Request
-      </a>
-      <span class="note">All signal types welcome — garage doors, car keys, intercoms, weather stations, or anything custom.</span>
+    <!-- Guided tab -->
+    <div class="tab-pane active" id="tab-guided">
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="file-input" accept=".sub" />
+        <div class="drop-icon" id="drop-icon">📂</div>
+        <h3 id="drop-title">Drop your .sub file here</h3>
+        <p id="drop-sub">or click to browse — Frequency &amp; Protocol auto-detected</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Signal Name *</label>
+          <input type="text" id="f-name" placeholder="e.g. My Garage Door 433MHz" />
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="f-category">
+            <option value="">— Select category —</option>
+            <option value="garage_doors">Garage Doors</option>
+            <option value="car_keys">Car Keys</option>
+            <option value="intercoms">Intercoms</option>
+            <option value="weather_stations">Weather Stations</option>
+            <option value="custom">Custom / Unknown</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Frequency (auto-detected)</label>
+          <input type="text" id="f-frequency" placeholder="e.g. 433.92 MHz" />
+        </div>
+        <div class="form-group">
+          <label>Protocol (auto-detected)</label>
+          <input type="text" id="f-protocol" placeholder="e.g. OOK, Princeton, RAW" />
+        </div>
+        <div class="form-group">
+          <label>Your GitHub Username *</label>
+          <input type="text" id="f-contributor" placeholder="your_username" />
+        </div>
+        <div class="form-group">
+          <label>Filename (auto-filled)</label>
+          <input type="text" id="f-filename" placeholder="my_signal_433.sub" />
+        </div>
+        <div class="form-group full">
+          <label>Description *</label>
+          <textarea id="f-description" placeholder="What device is this? What does the signal do? Where was it captured?"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-generate" onclick="generateEntry()">⚡ Generate JSON Entry</button>
+      </div>
+
+      <div class="output-block" id="output-block">
+        <div class="output-toolbar">
+          <span class="output-title">signals.json entry — ready to paste</span>
+          <button class="btn-copy" onclick="copyOutput()">📋 Copy</button>
+        </div>
+        <pre id="output-pre"></pre>
+        <div style="padding:0 20px 20px">
+          <div class="next-steps" id="next-steps-box">
+            <strong>Next steps:</strong><br>
+            1. Fork <a href="https://github.com/og34/flipper-signal-db" target="_blank" style="color:var(--accent)">og34/flipper-signal-db</a> on GitHub<br>
+            2. Upload your <code id="ns-filename" style="background:rgba(247,147,30,.12);color:var(--accent);border-radius:4px;padding:1px 5px"></code> into the <code style="background:rgba(247,147,30,.12);color:var(--accent);border-radius:4px;padding:1px 5px">signals/</code> folder<br>
+            3. Paste the JSON above into <code style="background:rgba(247,147,30,.12);color:var(--accent);border-radius:4px;padding:1px 5px">signals.json</code><br>
+            4. Open a Pull Request 🚀<br>
+            <a class="pr-btn" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener">⬆️ Open Pull Request on GitHub</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
 
-</main>
+    <!-- Manual tab -->
+    <div class="tab-pane" id="tab-manual">
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Fork the repo</h3>
+          <p>Click <strong>Fork</strong> on GitHub to get your own copy of <code>flipper-signal-db</code>.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Add your .sub file</h3>
+          <p>Upload your Flipper <code>.sub</code> file into the <code>signals/</code> folder.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Update signals.json</h3>
+          <p>Append a new object to the array following the format below.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Open a Pull Request</h3>
+          <p>Submit a PR against <code>main</code> — a maintainer will review within a few days.</p>
+        </div>
+      </div>
 
-<!-- ── Footer ── -->
+      <div class="schema-block">
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">signals.json format</span>
+          <button class="btn-copy" onclick="copySchema()">📋 Copy</button>
+        </div>
+        <pre id="schema-pre"><span class="jp">{</span>
+  <span class="jk">"name"</span><span class="jp">:</span>        <span class="jv">"My Garage Door 433MHz"</span><span class="jp">,</span>
+  <span class="jk">"frequency"</span><span class="jp">:</span>   <span class="jv">"433.92 MHz"</span><span class="jp">,</span>
+  <span class="jk">"protocol"</span><span class="jp">:</span>    <span class="jv">"OOK"</span><span class="jp">,</span>
+  <span class="jk">"description"</span><span class="jp">:</span> <span class="jv">"Single-channel remote for a XYZ brand gate opener."</span><span class="jp">,</span>
+  <span class="jk">"category"</span><span class="jp">:</span>    <span class="jv">"garage_doors"</span><span class="jp">,</span>
+  <span class="jk">"contributor"</span><span class="jp">:</span> <span class="jv">"your_github_username"</span><span class="jp">,</span>
+  <span class="jk">"filename"</span><span class="jp">:</span>    <span class="jv">"my_garage_door_433.sub"</span>
+<span class="jp">}</span></pre>
+      </div>
+
+      <div class="guidelines">
+        <div class="guideline"><span class="gi">✅</span> Include accurate frequency and protocol</div>
+        <div class="guideline"><span class="gi">✅</span> Use a descriptive filename (brand_model_freq.sub)</div>
+        <div class="guideline"><span class="gi">✅</span> Write a clear description of the device and signal</div>
+        <div class="guideline"><span class="gi">✅</span> Only submit signals you own or have permission to capture</div>
+        <div class="guideline"><span class="gi">❌</span> No rolling-code signals that compromise real security</div>
+        <div class="guideline"><span class="gi">❌</span> No personally identifiable information in files</div>
+      </div>
+
+      <div style="margin-top:24px">
+        <a class="btn-accent" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener" style="display:inline-flex">⬆️ Open Pull Request on GitHub</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Footer ─── -->
 <footer>
-  <p>
-    Built by the community for the community &mdash;
-    <a href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">flipper-signal-db</a>
-    on GitHub.
-    Use responsibly and only on frequencies you are legally permitted to transmit on.
-  </p>
+  <p>Built by the community · <a href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">og34/flipper-signal-db</a> · MIT License</p>
+  <p style="margin-top:6px;font-size:.75rem">Use responsibly. Only transmit on frequencies you are legally permitted to use.</p>
 </footer>
 
 <script>
-  const CATEGORY_LABELS = {
+  /* ──────────── Data & State ──────────── */
+  const CATS = {
     garage_doors:     'Garage Doors',
     car_keys:         'Car Keys',
     intercoms:        'Intercoms',
@@ -708,116 +1189,320 @@
     custom:           'Custom',
   };
 
+  const COLORS = {
+    garage_doors:     '#3ddc84',
+    car_keys:         '#4fa3e0',
+    intercoms:        '#9b6dff',
+    weather_stations: '#2dd4bf',
+    custom:           '#f7c948',
+  };
+
+  const AVATAR_COLORS = [
+    '#f7931e','#ff5f1f','#3ddc84','#4fa3e0','#9b6dff','#2dd4bf','#f7c948','#ff5f5f',
+  ];
+
   let allSignals = [];
   let activeCategory = 'all';
   let searchQuery = '';
+  let sortMode = 'default';
 
-  // ── Fetch signals ──
+  /* ──────────── Fetch ──────────── */
   async function init() {
     try {
-      const res = await fetch('signals.json');
-      allSignals = await res.json();
-      document.getElementById('signal-count-badge').textContent =
-        `${allSignals.length} signal${allSignals.length !== 1 ? 's' : ''}`;
+      const r = await fetch('signals.json');
+      allSignals = await r.json();
+      updateStats();
       render();
-    } catch (e) {
+    } catch {
       document.getElementById('grid').innerHTML =
-        '<div class="empty"><div class="empty-icon">⚠️</div><h3>Could not load signals</h3><p>Make sure you are serving this page over HTTP, not file://</p></div>';
+        '<div class="empty"><div class="empty-icon">⚠️</div><h3>Could not load signals</h3><p>Serve this page over HTTP — not file://</p></div>';
     }
   }
 
-  // ── Filter logic ──
-  function filtered() {
+  /* ──────────── Stats ──────────── */
+  function updateStats() {
+    document.getElementById('header-count').innerHTML =
+      `<span>${allSignals.length}</span> signals`;
+    document.getElementById('s-all').textContent = allSignals.length;
+    Object.keys(CATS).forEach(cat => {
+      const el = document.getElementById('s-' + cat);
+      if (el) el.textContent = allSignals.filter(s => s.category === cat).length;
+    });
+  }
+
+  /* ──────────── Filter & Sort ──────────── */
+  function getFiltered() {
     const q = searchQuery.toLowerCase();
-    return allSignals.filter(s => {
+    let list = allSignals.filter(s => {
       const matchCat = activeCategory === 'all' || s.category === activeCategory;
-      const matchQ   = !q ||
+      const matchQ = !q ||
         s.name.toLowerCase().includes(q) ||
         s.frequency.toLowerCase().includes(q) ||
         s.protocol.toLowerCase().includes(q) ||
         s.description.toLowerCase().includes(q) ||
-        s.contributor.toLowerCase().includes(q);
+        (s.contributor || '').toLowerCase().includes(q);
       return matchCat && matchQ;
     });
+
+    if (sortMode === 'name-az') list.sort((a,b) => a.name.localeCompare(b.name));
+    if (sortMode === 'name-za') list.sort((a,b) => b.name.localeCompare(a.name));
+    if (sortMode === 'freq-asc') list.sort((a,b) => parseFreq(a.frequency) - parseFreq(b.frequency));
+    if (sortMode === 'freq-desc') list.sort((a,b) => parseFreq(b.frequency) - parseFreq(a.frequency));
+
+    return list;
   }
 
-  // ── Render ──
+  function parseFreq(f) {
+    return parseFloat(String(f).replace(/[^\d.]/g, '')) || 0;
+  }
+
+  /* ──────────── Render ──────────── */
   function render() {
-    const signals = filtered();
-    const grid    = document.getElementById('grid');
-    const count   = document.getElementById('results-count');
+    const signals = getFiltered();
+    const grid = document.getElementById('grid');
+    const info = document.getElementById('results-info');
 
-    count.innerHTML = `Showing <strong>${signals.length}</strong> of <strong>${allSignals.length}</strong> signals`;
+    info.innerHTML = `Showing <strong>${signals.length}</strong> of <strong>${allSignals.length}</strong> signals`;
 
-    if (signals.length === 0) {
-      grid.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">📭</div>
-          <h3>No signals found</h3>
-          <p>Try a different search term or category filter.</p>
-        </div>`;
+    if (!signals.length) {
+      grid.innerHTML = `<div class="empty">
+        <div class="empty-icon">📭</div>
+        <h3>No signals found</h3>
+        <p>Try a different search or category.</p>
+      </div>`;
       return;
     }
 
-    grid.innerHTML = signals.map(s => cardHTML(s)).join('');
+    grid.innerHTML = signals.map(cardHTML).join('');
   }
 
-  function initials(name) {
-    return name.slice(0, 2).toUpperCase();
+  /* ──────────── Waveform SVG ──────────── */
+  function waveformSVG(color, seed) {
+    const w = 330, h = 48, mid = h / 2;
+    let d = `M0 ${mid}`;
+    let x = 0;
+    let s = seed;
+    const next = () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+
+    while (x < w) {
+      const high = next() > 0.5;
+      const len  = Math.floor(next() * 18 + 6);
+      const amp  = Math.floor(next() * 14 + 4);
+      const y    = high ? mid - amp : mid + amp;
+      d += ` L${x} ${mid} L${x} ${y} L${Math.min(x+len, w)} ${y} L${Math.min(x+len, w)} ${mid}`;
+      x += len + Math.floor(next() * 10 + 4);
+    }
+
+    d += ` L${w} ${mid}`;
+    return `<svg class="card-wave" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      <path d="${d}" stroke="${color}" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </svg>`;
+  }
+
+  function avatarColor(name) {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
+    return AVATAR_COLORS[h % AVATAR_COLORS.length];
   }
 
   function cardHTML(s) {
-    return `
-      <div class="card">
-        <div class="card-header">
+    const color = COLORS[s.category] || '#ffffff';
+    const seed  = Array.from(s.name).reduce((a,c) => a + c.charCodeAt(0), 0);
+    const initials = (s.contributor || '?').slice(0, 2).toUpperCase();
+    const bg = avatarColor(s.contributor || '');
+
+    return `<div class="card" data-cat="${esc(s.category)}">
+      ${waveformSVG(color, seed)}
+      <div class="card-body">
+        <div class="card-top">
           <div class="card-title">${esc(s.name)}</div>
-          <span class="cat-badge ${esc(s.category)}">${esc(CATEGORY_LABELS[s.category] || s.category)}</span>
+          <span class="cat-chip ${esc(s.category)}">${esc(CATS[s.category] || s.category)}</span>
         </div>
         <p class="card-desc">${esc(s.description)}</p>
-        <div class="card-meta">
-          <div class="meta-item">
-            <div class="meta-label">Frequency</div>
-            <div class="meta-value">${esc(s.frequency)}</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Protocol</div>
-            <div class="meta-value">${esc(s.protocol)}</div>
-          </div>
+        <div class="card-pills">
+          <span class="info-pill" title="Click to copy" onclick="copyText('${esc(s.frequency)}','Frequency copied')">
+            <span class="pill-label">FREQ</span>${esc(s.frequency)}
+          </span>
+          <span class="info-pill" title="Click to copy" onclick="copyText('${esc(s.protocol)}','Protocol copied')">
+            <span class="pill-label">PROTO</span>${esc(s.protocol)}
+          </span>
         </div>
-        <div class="card-footer">
-          <div class="contributor">
-            <div class="contributor-avatar">${esc(initials(s.contributor))}</div>
-            ${esc(s.contributor)}
-          </div>
-          <a class="btn-download" href="signals/${esc(s.filename)}" download="${esc(s.filename)}">
-            ⬇ Download .sub
-          </a>
+      </div>
+      <div class="card-footer">
+        <div class="contributor">
+          <div class="avatar" style="background:${bg}">${esc(initials)}</div>
+          <span class="contributor-name">${esc(s.contributor || 'anonymous')}</span>
         </div>
-      </div>`;
+        <a class="btn-dl" href="signals/${esc(s.filename)}" download="${esc(s.filename)}" onclick="toast('Download started — copy to Flipper SD: SD/subghz/','success')">
+          ⬇ .sub
+        </a>
+      </div>
+    </div>`;
   }
 
-  function esc(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  /* ──────────── Utils ──────────── */
+  function esc(s) {
+    return String(s ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Events ──
+  function toast(msg, type = '') {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast' + (type ? ' ' + type : '');
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => {
+      t.style.animation = 'toastOut .25s ease forwards';
+      setTimeout(() => t.remove(), 260);
+    }, 2600);
+  }
+
+  function copyText(text, msg) {
+    navigator.clipboard.writeText(text).then(() => toast(msg || 'Copied!', 'success'));
+  }
+
+  /* ──────────── Events ──────────── */
+  let searchTimer;
   document.getElementById('search').addEventListener('input', e => {
-    searchQuery = e.target.value;
-    render();
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { searchQuery = e.target.value; render(); }, 180);
   });
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeCategory = btn.dataset.cat;
+  document.querySelectorAll('.stat-item').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.stat-item').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      activeCategory = el.dataset.cat;
       render();
     });
   });
+
+  document.getElementById('sort-select').addEventListener('change', e => {
+    sortMode = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll('.submit-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.submit-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ──────────── .sub File Parser ──────────── */
+  const dropZone  = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+
+  function parseSub(text, filename) {
+    const lines = text.split('\n');
+    const get = key => {
+      const line = lines.find(l => l.trim().startsWith(key + ':'));
+      return line ? line.split(':').slice(1).join(':').trim() : '';
+    };
+
+    const rawFreq = get('Frequency');
+    let frequency = '';
+    if (rawFreq) {
+      const hz = parseInt(rawFreq, 10);
+      frequency = (hz / 1_000_000).toFixed(2).replace(/\.?0+$/, '') + ' MHz';
+    }
+
+    let protocol = get('Protocol') || '';
+    if (!protocol) {
+      const preset = get('Preset');
+      if (preset.includes('Ook')) protocol = 'OOK';
+      else if (preset.includes('2FSK')) protocol = '2-FSK';
+    }
+
+    if (rawFreq)  document.getElementById('f-frequency').value = frequency;
+    if (protocol) document.getElementById('f-protocol').value  = protocol;
+    if (filename) {
+      document.getElementById('f-filename').value = filename;
+      if (!document.getElementById('f-name').value) {
+        document.getElementById('f-name').value = filename
+          .replace(/\.sub$/i, '')
+          .replace(/[_-]/g, ' ')
+          .replace(/\b\w/g, c => c.toUpperCase());
+      }
+    }
+
+    dropZone.classList.add('has-file');
+    document.getElementById('drop-icon').textContent  = '✅';
+    document.getElementById('drop-title').textContent = filename || 'File loaded';
+    document.getElementById('drop-sub').textContent   =
+      `Frequency: ${frequency || '?'}  ·  Protocol: ${protocol || '?'}`;
+    toast('File parsed — frequency & protocol auto-detected', 'success');
+  }
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => parseSub(e.target.result, file.name);
+    reader.readAsText(file);
+  });
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => parseSub(ev.target.result, file.name);
+    reader.readAsText(file);
+  });
+
+  /* ──────────── Generate Entry ──────────── */
+  function generateEntry() {
+    const name        = document.getElementById('f-name').value.trim();
+    const frequency   = document.getElementById('f-frequency').value.trim();
+    const protocol    = document.getElementById('f-protocol').value.trim();
+    const description = document.getElementById('f-description').value.trim();
+    const category    = document.getElementById('f-category').value;
+    const contributor = document.getElementById('f-contributor').value.trim();
+    const filename    = document.getElementById('f-filename').value.trim();
+
+    if (!name || !category || !contributor || !description) {
+      toast('Please fill in Name, Category, Contributor and Description', 'error');
+      return;
+    }
+
+    const entry = {
+      name, frequency: frequency || 'Unknown',
+      protocol: protocol || 'Unknown',
+      description, category, contributor,
+      filename: filename || 'my_signal.sub',
+    };
+
+    document.getElementById('output-pre').textContent = JSON.stringify(entry, null, 2);
+    document.getElementById('ns-filename').textContent = entry.filename;
+    document.getElementById('output-block').classList.add('visible');
+    document.getElementById('output-block').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    toast('JSON entry generated — copy and paste into signals.json', 'success');
+  }
+
+  function copyOutput() {
+    const text = document.getElementById('output-pre').textContent;
+    copyText(text, 'JSON entry copied to clipboard!');
+  }
+
+  function copySchema() {
+    const raw = `{
+  "name":        "My Garage Door 433MHz",
+  "frequency":   "433.92 MHz",
+  "protocol":    "OOK",
+  "description": "Single-channel remote for a XYZ brand gate opener.",
+  "category":    "garage_doors",
+  "contributor": "your_github_username",
+  "filename":    "my_garage_door_433.sub"
+}`;
+    copyText(raw, 'Schema copied to clipboard!');
+  }
 
   init();
 </script>
