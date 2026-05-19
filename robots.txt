@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://og34.github.io/flipper-signal-db/sitemap.xml
