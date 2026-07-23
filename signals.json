@@ -1,15 +1,5 @@
 [
   {
-    "name": "Car Key Fob 315MHz",
-    "frequency": "315.00 MHz",
-    "protocol": "OOK",
-    "description": "Generic North American car key fob signal at 315 MHz. Recorded from a common aftermarket remote.",
-    "category": "car_keys",
-    "region": "us",
-    "contributor": "rf_hunter",
-    "filename": "car_keyfob_315.sub"
-  },
-  {
     "name": "Apartment Intercom Bell",
     "frequency": "433.92 MHz",
     "protocol": "Princeton",
@@ -30,16 +20,6 @@
     "filename": "acurite_weather_433.sub"
   },
   {
-    "name": "Custom ISM Band Beacon",
-    "frequency": "868.35 MHz",
-    "protocol": "RAW",
-    "description": "Custom raw beacon signal captured on the European ISM band at 868 MHz. Purpose unknown — shared for analysis.",
-    "category": "custom",
-    "region": "eu",
-    "contributor": "wave_watcher",
-    "filename": "custom_ism_868.sub"
-  },
-  {
     "name": "Pedestrian Light Request",
     "frequency": "868.35 MHz",
     "protocol": "RAW",
@@ -48,5 +28,365 @@
     "region": "eu",
     "contributor": "traffic_watcher",
     "filename": "pedestrian_light.sub"
+  },
+    {
+    "name": "Jamming 314.35MHz",
+    "frequency": "314.35 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 314.35 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_314.35.sub"
+  },
+  {
+    "name": "Jamming 315.00MHz",
+    "frequency": "315.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 315.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_315.00.sub"
+  },
+  {
+    "name": "Jamming 330.00MHz",
+    "frequency": "330.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 330.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_330.00.sub"
+  },
+  {
+    "name": "Jamming 345.00MHz",
+    "frequency": "345.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 345.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_345.00.sub"
+  },
+  {
+    "name": "Jamming 348.00MHz",
+    "frequency": "348.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 348.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_348.00.sub"
+  },
+  {
+    "name": "Jamming 387.00MHz",
+    "frequency": "387.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 387.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_387.00.sub"
+  },
+  {
+    "name": "Jamming 390.00MHz",
+    "frequency": "390.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 390.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_390.00.sub"
+  },
+  {
+    "name": "Jamming 418.00MHz",
+    "frequency": "418.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 418.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_418.00.sub"
+  },
+  {
+    "name": "Jamming 433.22MHz",
+    "frequency": "433.22 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 433.22 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_433.22.sub"
+  },
+  {
+    "name": "Jamming 433.42MHz",
+    "frequency": "433.42 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 433.42 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_433.42.sub"
+  },
+  {
+    "name": "Jamming 433.65MHz",
+    "frequency": "433.65 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 433.65 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_433.65.sub"
+  },
+  {
+    "name": "Jamming 433.88MHz",
+    "frequency": "433.88 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 433.88 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_433.88.sub"
+  },
+  {
+    "name": "Jamming 433.92MHz",
+    "frequency": "433.92 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 433.92 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_433.92.sub"
+  },
+  {
+    "name": "Jamming 434.07MHz",
+    "frequency": "434.07 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.07 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.07.sub"
+  },
+  {
+    "name": "Jamming 434.17MHz",
+    "frequency": "434.17 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.17 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.17.sub"
+  },
+  {
+    "name": "Jamming 434.19MHz",
+    "frequency": "434.19 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.19 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.19.sub"
+  },
+  {
+    "name": "Jamming 434.39MHz",
+    "frequency": "434.39 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.39 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.39.sub"
+  },
+  {
+    "name": "Jamming 434.42MHz",
+    "frequency": "434.42 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.42 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.42.sub"
+  },
+  {
+    "name": "Jamming 434.62MHz",
+    "frequency": "434.62 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.62 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.62.sub"
+  },
+  {
+    "name": "Jamming 434.77MHz",
+    "frequency": "434.77 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 434.77 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_434.77.sub"
+  },
+  {
+    "name": "Jamming 438.90MHz",
+    "frequency": "438.90 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 438.90 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_438.90.sub"
+  },
+  {
+    "name": "Jamming 440.17MHz",
+    "frequency": "440.17 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 440.17 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_440.17.sub"
+  },
+  {
+    "name": "Jamming 464.00MHz",
+    "frequency": "464.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 464.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_464.00.sub"
+  },
+  {
+    "name": "Jamming 779.00MHz",
+    "frequency": "779.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 779.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_779.00.sub"
+  },
+  {
+    "name": "Jamming 868.10MHz",
+    "frequency": "868.10 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.10 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.10.sub"
+  },
+  {
+    "name": "Jamming 868.35MHz",
+    "frequency": "868.35 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.35 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.35.sub"
+  },
+  {
+    "name": "Jamming 868.40MHz",
+    "frequency": "868.40 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.40 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.40.sub"
+  },
+  {
+    "name": "Jamming 868.50MHz",
+    "frequency": "868.50 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.50 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.50.sub"
+  },
+  {
+    "name": "Jamming 868.80MHz",
+    "frequency": "868.80 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.80 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.80.sub"
+  },
+  {
+    "name": "Jamming 868.90MHz",
+    "frequency": "868.90 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.90 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.90.sub"
+  },
+  {
+    "name": "Jamming 868.92MHz",
+    "frequency": "868.92 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 868.92 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_868.92.sub"
+  },
+  {
+    "name": "Jamming 869.50MHz",
+    "frequency": "869.50 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 869.50 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Jam_869.50.sub"
+  },
+  {
+    "name": "Jamming 906.40MHz",
+    "frequency": "906.40 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 906.40 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_906.40.sub"
+  },
+  {
+    "name": "Jamming 915.00MHz",
+    "frequency": "915.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 915.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_915.00.sub"
+  },
+  {
+    "name": "Jamming 925.00MHz",
+    "frequency": "925.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 925.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_925.00.sub"
+  },
+  {
+    "name": "Jamming 928.00MHz",
+    "frequency": "928.00 MHz",
+    "protocol": "RAW",
+    "description": "Wideband jamming signal captured around 928.00 MHz for laboratory RF analysis and testing.",
+    "category": "jamming",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Jam_928.00.sub"
   }
 ]
