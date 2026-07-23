@@ -397,6 +397,14 @@
     .cat-chip.custom           { background: rgba(247,201,72,.12); color: var(--yellow); }
     .cat-chip.jamming          { background: rgba(255,95,95,.12); color: var(--red); }
 
+    /* ── Status Badges ── */
+    .status-badge { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 3px 8px; border-radius: 20px; display: inline-flex; align-items: center; }
+    .status-badge.tested                 { background: rgba(61,220,132,.12); color: var(--green); }
+    .status-badge.works                  { background: rgba(45,212,191,.12); color: var(--teal); }
+    .status-badge.untested               { background: rgba(247,201,72,.12); color: var(--yellow); }
+    .status-badge.converted_from_binraw  { background: rgba(155,109,255,.12); color: var(--purple); }
+    .status-badge.converted-sub          { background: rgba(255,255,255,.05); color: var(--muted); border: 1px dashed var(--border); }
+
     .card-desc {
       font-size: .82rem; color: var(--muted); line-height: 1.55;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
@@ -626,7 +634,10 @@
     <div class="modal-header">
       <div class="modal-header-left">
         <div class="modal-title" id="modal-title"></div>
-        <span class="cat-chip" id="modal-cat"></span>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span class="cat-chip" id="modal-cat"></span>
+          <span id="modal-status-container" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"></span>
+        </div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
@@ -822,6 +833,25 @@
         <div class="form-group">
           <label>Filename (auto-filled)</label>
           <input type="text" id="f-filename" placeholder="my_signal_433.sub" />
+        </div>
+        <div class="form-group">
+          <label>Test Status</label>
+          <select id="f-test-status" onchange="toggleConvertedStatusField()">
+            <option value="">— Select status —</option>
+            <option value="tested">tested</option>
+            <option value="works">works</option>
+            <option value="untested">untested</option>
+            <option value="converted_from_binraw">converted from BinRAW</option>
+          </select>
+        </div>
+        <div class="form-group" id="group-converted-status" style="display:none;">
+          <label>Converted File Status</label>
+          <select id="f-converted-status">
+            <option value="">— Select converted status —</option>
+            <option value="tested">tested</option>
+            <option value="works">works</option>
+            <option value="untested">untested</option>
+          </select>
         </div>
         <div class="form-group full">
           <label>Description *</label>
@@ -1529,6 +1559,21 @@
     </svg>`;
   }
 
+  function getStatusBadgesHTML(s) {
+    if (!s.test_status) return '';
+    let html = '';
+    
+    if (s.test_status === 'converted_from_binraw') {
+      const convStatus = s.converted_status || 'untested';
+      html += `<span class="status-badge converted_from_binraw">converted</span>`;
+      html += `<span class="status-badge converted-sub">converted • ${esc(convStatus)}</span>`;
+    } else {
+      html += `<span class="status-badge ${esc(s.test_status)}">${esc(s.test_status)}</span>`;
+    }
+    
+    return html;
+  }
+
   function avatarColor(n) {
     let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))&0xffff;
     return AV_COLORS[h%AV_COLORS.length];
@@ -1561,6 +1606,7 @@
           <span class="info-pill" title="Copy protocol" onclick="event.stopPropagation();copyText('${esc(s.protocol)}','Protocol copied')">
             <span class="pl">PROTO</span>${esc(s.protocol)}
           </span>
+          ${getStatusBadgesHTML(s)}
         </div>
       </div>
       <div class="card-footer">
@@ -1586,6 +1632,7 @@
     const chip = document.getElementById('modal-cat');
     chip.textContent = CATS[s.category]||s.category;
     chip.className = 'cat-chip ' + s.category;
+    document.getElementById('modal-status-container').innerHTML = getStatusBadgesHTML(s);
     document.getElementById('modal-desc').textContent = s.description;
 
     document.getElementById('modal-meta').innerHTML = [
@@ -1724,6 +1771,19 @@
     const r=new FileReader(); r.onload=ev=>parseSub(ev.target.result,f.name); r.readAsText(f);
   });
 
+  function toggleConvertedStatusField() {
+    const testStatus = document.getElementById('f-test-status').value;
+    const groupConverted = document.getElementById('group-converted-status');
+    const convertedSelect = document.getElementById('f-converted-status');
+    
+    if (testStatus === 'converted_from_binraw') {
+      groupConverted.style.display = 'block';
+    } else {
+      groupConverted.style.display = 'none';
+      convertedSelect.value = '';
+    }
+  }
+
   /* ── Generate Entry ── */
   function generateEntry() {
     const name=document.getElementById('f-name').value.trim();
@@ -1734,10 +1794,18 @@
     const region=document.getElementById('f-region').value;
     const contributor=document.getElementById('f-contributor').value.trim();
     const filename=document.getElementById('f-filename').value.trim();
+    const testStatus=document.getElementById('f-test-status').value;
+    const convertedStatus=document.getElementById('f-converted-status').value;
     if (!name||!category||!region||!contributor||!description) {
       toast('Please fill in Name, Category, Region, Contributor and Description','error'); return;
     }
     const entry={name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,region,contributor,filename:filename||'my_signal.sub'};
+    if (testStatus) {
+      entry.test_status = testStatus;
+      if (testStatus === 'converted_from_binraw' && convertedStatus) {
+        entry.converted_status = convertedStatus;
+      }
+    }
     const json = JSON.stringify(entry,null,2);
     document.getElementById('output-pre').textContent = json;
     document.getElementById('ns-fn').textContent = entry.filename;

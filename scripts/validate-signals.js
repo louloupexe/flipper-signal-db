@@ -119,6 +119,18 @@ try {
       reportError(`[${label}] Invalid region "${entry.region}" — must be one of: ${ALLOWED_REGIONS.join(', ')}`);
     }
 
+    // Check test_status validity if present
+    const ALLOWED_TEST_STATUS = ['tested', 'works', 'untested', 'converted_from_binraw'];
+    if (entry.test_status && !ALLOWED_TEST_STATUS.includes(entry.test_status)) {
+      reportError(`[${label}] Invalid test_status "${entry.test_status}" — must be one of: ${ALLOWED_TEST_STATUS.join(', ')}`);
+    }
+
+    // Check converted_status validity if present
+    const ALLOWED_CONVERTED_STATUS = ['tested', 'works', 'untested'];
+    if (entry.converted_status && !ALLOWED_CONVERTED_STATUS.includes(entry.converted_status)) {
+      reportError(`[${label}] Invalid converted_status "${entry.converted_status}" — must be one of: ${ALLOWED_CONVERTED_STATUS.join(', ')}`);
+    }
+
     // Check that the referenced filename actually exists in signals/
     if (entry.filename) {
       if (!actualSubFilesSet.has(entry.filename)) {
