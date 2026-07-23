@@ -121,7 +121,7 @@ Then open a Pull Request on GitHub.
 
 ## Running Locally
 
-Because the page fetches `signals.json` via `fetch()`, you need a local HTTP server (not `file://`):
+Because the page fetches `signals.json` and `signals_files.json` via `fetch()`, you need a local HTTP server (not `file://`):
 
 ```bash
 # Python 3
@@ -132,6 +132,23 @@ npx serve .
 
 # Then open http://localhost:8080
 ```
+
+---
+
+## Signal Synchronization & Validation
+
+We use automated scripts to ensure that the site stays in sync and files are correctly mapped:
+
+- `npm run sync-signals`: Scans the `signals/` directory and updates `signals_files.json` (the list of existing `.sub` files).
+- `npm run validate-signals`: Performs full checks to ensure every signal has a valid metadata entry, no duplicate names/filenames exist, and all files are accounted for.
+
+Before submitting a Pull Request, please run:
+```bash
+npm run sync-signals
+npm run validate-signals
+```
+
+A GitHub Action will automatically run these validation checks on every Push and Pull Request to prevent broken configurations.
 
 ---
 

@@ -889,13 +889,40 @@
     loadTheme();
     loadFavorites();
     try {
-      const r = await fetch('signals.json');
-      allSignals = await r.json();
+      // Fetch both metadata and actual files list in parallel
+      const [rSignals, rFiles] = await Promise.all([
+        fetch('signals.json'),
+        fetch('signals_files.json')
+      ]);
+      const rawSignals = await rSignals.json();
+      const realFiles = await rFiles.json();
+      const realFilesSet = new Set(realFiles);
+
+      // 3. N'afficher que les éléments dont le fichier existe réellement dans signals/
+      // 4. Si une entrée JSON référence un fichier inexistant, l'ignorer et afficher un warning console
+      allSignals = rawSignals.filter(s => {
+        if (realFilesSet.has(s.filename)) {
+          return true;
+        } else {
+          console.warn(`[Signals Sync] Warning: Entry "${s.name}" references non-existent file "signals/${s.filename}"`);
+          return false;
+        }
+      });
+
+      // 5. Si un fichier .sub existe dans signals/ mais n'a pas d'entrée, afficher un warning console
+      const signalFileNames = new Set(rawSignals.map(s => s.filename));
+      realFiles.forEach(filename => {
+        if (!signalFileNames.has(filename)) {
+          console.warn(`[Signals Sync] Warning: File "signals/${filename}" exists in signals/ but has no entry in signals.json`);
+        }
+      });
+
       initSlider();
       updateStats();
       render();
       registerSW();
-    } catch {
+    } catch (err) {
+      console.error('[Signals Sync] Error loading signals:', err);
       document.getElementById('grid').innerHTML =
         '<div class="empty"><div class="empty-icon">⚠️</div><h3>Could not load signals</h3><p>Serve over HTTP, not file://</p></div>';
     }

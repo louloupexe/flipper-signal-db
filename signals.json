@@ -38,5 +38,15 @@
     "region": "eu",
     "contributor": "wave_watcher",
     "filename": "custom_ism_868.sub"
+  },
+  {
+    "name": "Pedestrian Light Request",
+    "frequency": "868.35 MHz",
+    "protocol": "RAW",
+    "description": "Pedestrian crossing light request signal recorded at 868.35 MHz in a European metropolitan area.",
+    "category": "custom",
+    "region": "eu",
+    "contributor": "traffic_watcher",
+    "filename": "pedestrian_light.sub"
   }
 ]

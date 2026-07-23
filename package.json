@@ -1,0 +1,17 @@
+{
+  "name": "flipper-signal-db",
+  "version": "1.0.0",
+  "description": "Static database of SubGhz signals for Flipper Zero",
+  "scripts": {
+    "sync-signals": "node scripts/sync-signals.js",
+    "validate-signals": "node scripts/validate-signals.js"
+  },
+  "keywords": [
+    "flipper",
+    "subghz",
+    "flipper-zero",
+    "signals"
+  ],
+  "author": "",
+  "license": "MIT"
+}
