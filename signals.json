@@ -48,5 +48,15 @@
     "region": "eu",
     "contributor": "wave_watcher",
     "filename": "custom_ism_868.sub"
-  }
+  },
+  {
+  "name": "pedestrian light to sound",
+  "frequency": "868.35 MHz",
+  "protocol": "BinRAW",
+  "description": "allow pedestrian light to sound on France",
+  "category": "custom",
+  "region": "eu",
+  "contributor": "louloupexe",
+  "filename": "pedestrian_light.sub"
+}
 ]
