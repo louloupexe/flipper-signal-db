@@ -863,21 +863,21 @@
       </div>
       <div class="output-block" id="output-block">
         <div class="output-toolbar">
-          <span class="output-title">signals_files.json entry — ready to paste</span>
+          <span class="output-title">signals.json entry — ready to paste</span>
           <button class="btn-copy" onclick="copyOutput()">📋 Copy</button>
         </div>
         <div style="padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--muted);">
-          This generated entry should be added to <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals_files.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals_files.json</a>:
+          This generated entry should be added to <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals.json</a>:
         </div>
         <pre id="output-pre"></pre>
         <div class="submit-steps-wrap">
           <div class="submit-step-card">
             <div class="submit-step-num">1</div>
             <div class="submit-step-body">
-              <div class="submit-step-title">Paste into signals_files.json</div>
+              <div class="submit-step-title">Paste into signals.json</div>
               <div class="submit-step-desc">JSON was copied to your clipboard. Click below — GitHub opens the file editor directly. Paste at the end of the array, then click <strong>Propose changes</strong>.</div>
-              <a class="submit-step-btn" id="btn-open-json" href="https://github.com/louloupexe/flipper-signal-db/edit/main/signals_files.json" target="_blank" rel="noopener" onclick="copyOutput()">
-                📝 Open signals_files.json on GitHub
+              <a class="submit-step-btn" id="btn-open-json" href="https://github.com/louloupexe/flipper-signal-db/edit/main/signals.json" target="_blank" rel="noopener" onclick="copyOutput()">
+                📝 Open signals.json on GitHub
               </a>
             </div>
           </div>
@@ -907,23 +907,25 @@
       <div class="steps-grid">
         <div class="step-card"><div class="step-num">1</div><h3>Fork the repo</h3><p>Click <strong>Fork</strong> on GitHub to copy <code>flipper-signal-db</code> to your account.</p></div>
         <div class="step-card"><div class="step-num">2</div><h3>Add your .sub file</h3><p>Upload your Flipper <code>.sub</code> file into the <code>signals/</code> folder.</p></div>
-        <div class="step-card"><div class="step-num">3</div><h3>Update signals_files.json</h3><p>Append a new entry to the array in <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals_files.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals_files.json</a> — see schema below.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3>Update signals.json</h3><p>Append a new entry to the array in <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals.json</a> — see schema below.</p></div>
         <div class="step-card"><div class="step-num">4</div><h3>Open a Pull Request</h3><p>Submit a PR against <code>main</code>. CI validates your entry automatically.</p></div>
       </div>
       <div class="schema-block">
         <div style="padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">signals_files.json format</span>
+          <span style="font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">signals.json format</span>
           <button class="btn-copy" onclick="copySchema()">📋 Copy</button>
         </div>
         <div style="padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--muted);">
-          Then add your signal metadata to <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals_files.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals_files.json</a>:
+          Then add your signal metadata to <a href="https://github.com/louloupexe/flipper-signal-db/blob/main/signals.json" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">signals.json</a>:
         </div>
         <pre><span class="jp">{</span>
+  <span class="jk">"file"</span><span class="jp">:</span>        <span class="jv">"my_garage_door_433.sub"</span><span class="jp">,</span>
   <span class="jk">"name"</span><span class="jp">:</span>        <span class="jv">"My Garage Door 433MHz"</span><span class="jp">,</span>
   <span class="jk">"frequency"</span><span class="jp">:</span>   <span class="jv">"433.92 MHz"</span><span class="jp">,</span>
   <span class="jk">"protocol"</span><span class="jp">:</span>    <span class="jv">"OOK"</span><span class="jp">,</span>
   <span class="jk">"description"</span><span class="jp">:</span> <span class="jv">"Single-channel remote for a XYZ brand gate opener."</span><span class="jp">,</span>
   <span class="jk">"category"</span><span class="jp">:</span>    <span class="jv">"garage_doors"</span><span class="jp">,</span>
+  <span class="jk">"region"</span><span class="jp">:</span>      <span class="jv">"us"</span><span class="jp">,</span>
   <span class="jk">"contributor"</span><span class="jp">:</span> <span class="jv">"your_github_username"</span><span class="jp">,</span>
   <span class="jk">"filename"</span><span class="jp">:</span>    <span class="jv">"my_garage_door_433.sub"</span><span class="jp">,</span>
   <span class="jk">"test_status"</span><span class="jp">:</span> <span class="jv">"works"</span>
@@ -1380,33 +1382,8 @@
     loadTheme();
     loadFavorites();
     try {
-      // Fetch both metadata and actual files list in parallel
-      const [rSignals, rFiles] = await Promise.all([
-        fetch('signals.json'),
-        fetch('signals_files.json')
-      ]);
-      const rawSignals = await rSignals.json();
-      const realFiles = await rFiles.json();
-      const realFilesSet = new Set(realFiles);
-
-      // 3. N'afficher que les éléments dont le fichier existe réellement dans signals/
-      // 4. Si une entrée JSON référence un fichier inexistant, l'ignorer et afficher un warning console
-      allSignals = rawSignals.filter(s => {
-        if (realFilesSet.has(s.filename)) {
-          return true;
-        } else {
-          console.warn(`[Signals Sync] Warning: Entry "${s.name}" references non-existent file "signals/${s.filename}"`);
-          return false;
-        }
-      });
-
-      // 5. Si un fichier .sub existe dans signals/ mais n'a pas d'entrée, afficher un warning console
-      const signalFileNames = new Set(rawSignals.map(s => s.filename));
-      realFiles.forEach(filename => {
-        if (!signalFileNames.has(filename)) {
-          console.warn(`[Signals Sync] Warning: File "signals/${filename}" exists in signals/ but has no entry in signals.json`);
-        }
-      });
+      const response = await fetch('signals.json');
+      allSignals = await response.json();
 
       initSlider();
       updateStats();
@@ -1526,7 +1503,7 @@
     let list = allSignals.filter(s => {
       if (activeCategory !== 'all' && s.category !== activeCategory) return false;
       if (activeRegion !== 'all' && s.region !== activeRegion) return false;
-      if (showFavOnly && !favorites.has(s.filename)) return false;
+      if (showFavOnly && !favorites.has(s.file || s.filename)) return false;
       const f = parseFreq(s.frequency);
       if (f && (f < freqMin || f > freqMax)) return false;
       if (q && ![s.name, s.frequency, s.protocol, s.description, s.contributor].join(' ').toLowerCase().includes(q)) return false;
@@ -1588,9 +1565,10 @@
 
   /* ── Card HTML ── */
   function cardHTML(s) {
+    const fn    = s.file || s.filename;
     const color = COLORS[s.category]||'#fff';
     const seed  = [...s.name].reduce((a,c)=>a+c.charCodeAt(0),0);
-    const isFav = favorites.has(s.filename);
+    const isFav = favorites.has(fn);
     const bg    = avatarColor(s.contributor||'');
     const ini   = (s.contributor||'?').slice(0,2).toUpperCase();
 
@@ -1600,7 +1578,7 @@
         <div class="card-top">
           <div class="card-title">${esc(s.name)}</div>
           <div class="card-top-right">
-            <button class="fav-btn${isFav?' active':''}" onclick="toggleFavorite('${esc(s.filename)}',event)" title="${isFav?'Remove from':'Add to'} favorites">${isFav?'⭐':'☆'}</button>
+            <button class="fav-btn${isFav?' active':''}" onclick="toggleFavorite('${esc(fn)}',event)" title="${isFav?'Remove from':'Add to'} favorites">${isFav?'⭐':'☆'}</button>
             ${s.region ? `<span class="region-badge ${esc(s.region)}">${REGIONS[s.region]||s.region}</span>` : ''}
             <span class="cat-chip ${esc(s.category)}">${esc(CATS[s.category]||s.category)}</span>
           </div>
@@ -1621,8 +1599,8 @@
           <div class="avatar" style="background:${bg}">${esc(ini)}</div>
           <span class="contributor-name">${esc(s.contributor||'anonymous')}</span>
         </div>
-        <a class="btn-dl" href="signals/${esc(s.filename)}" download="${esc(s.filename)}"
-           onclick="event.stopPropagation();handleDownloadOrSerial('${esc(s.filename)}',event)"
+        <a class="btn-dl" href="signals/${esc(fn)}" download="${esc(fn)}"
+           onclick="event.stopPropagation();handleDownloadOrSerial('${esc(fn)}',event)"
            title="Send to Flipper via Web Serial, or download if unavailable">
           📲 Send / DL
         </a>
@@ -1634,6 +1612,7 @@
   function openModal(s) {
     if (typeof s === 'string') s = JSON.parse(s);
     currentModal = s;
+    const fn    = s.file || s.filename;
     const color = COLORS[s.category]||'#fff';
     document.getElementById('modal-title').textContent = s.name;
     const chip = document.getElementById('modal-cat');
@@ -1645,7 +1624,7 @@
     document.getElementById('modal-meta').innerHTML = [
       ['Frequency', s.frequency], ['Protocol', s.protocol],
       ['Category', CATS[s.category]||s.category], ['Region', REGIONS[s.region]||s.region||'—'],
-      ['File', s.filename]
+      ['File', fn]
     ].map(([l,v]) => `<div class="modal-meta-item">
       <div class="modal-meta-label">${l}</div>
       <div class="modal-meta-value" style="color:${l==='Frequency'?color:'var(--text)'}">${esc(v)}</div>
@@ -1658,12 +1637,12 @@
        <span class="contributor-name">${esc(s.contributor||'anonymous')}</span>`;
 
     const dl = document.getElementById('modal-dl');
-    dl.href = 'signals/' + s.filename;
-    dl.download = s.filename;
+    dl.href = 'signals/' + fn;
+    dl.download = fn;
 
     const sub = document.getElementById('modal-sub');
     sub.textContent = 'Loading…';
-    fetch('signals/' + s.filename)
+    fetch('signals/' + fn)
       .then(r => r.ok ? r.text() : Promise.reject())
       .then(t => { sub.textContent = t; })
       .catch(() => { sub.textContent = '(Preview not available in file:// context — download the file to view it)'; });
@@ -1806,7 +1785,7 @@
     if (!name||!category||!region||!contributor||!description) {
       toast('Please fill in Name, Category, Region, Contributor and Description','error'); return;
     }
-    const entry={name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,region,contributor,filename:filename||'my_signal.sub'};
+    const entry={file:filename||'my_signal.sub',name,frequency:frequency||'Unknown',protocol:protocol||'Unknown',description,category,region,contributor,filename:filename||'my_signal.sub'};
     if (testStatus) {
       entry.test_status = testStatus;
       if (testStatus === 'converted_from_binraw' && convertedStatus) {
@@ -1824,7 +1803,7 @@
 
   function copyOutput() { copyText(document.getElementById('output-pre').textContent,'JSON copied to clipboard!'); }
   function copySchema() {
-    copyText(`{\n  "name":        "My Garage Door 433MHz",\n  "frequency":   "433.92 MHz",\n  "protocol":    "OOK",\n  "description": "Single-channel remote for a XYZ brand gate opener.",\n  "category":    "garage_doors",\n  "contributor": "your_github_username",\n  "filename":    "my_garage_door_433.sub",\n  "test_status": "works"\n}`,'Schema copied!');
+    copyText(`{\n  "file":        "my_garage_door_433.sub",\n  "name":        "My Garage Door 433MHz",\n  "frequency":   "433.92 MHz",\n  "protocol":    "OOK",\n  "description": "Single-channel remote for a XYZ brand gate opener.",\n  "category":    "garage_doors",\n  "region":      "us",\n  "contributor": "your_github_username",\n  "filename":    "my_garage_door_433.sub",\n  "test_status": "works"\n}`,'Schema copied!');
   }
 
   init();

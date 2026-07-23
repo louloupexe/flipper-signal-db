@@ -4,18 +4,16 @@ on:
   pull_request:
     paths:
       - 'signals.json'
-      - 'signals_files.json'
       - 'signals/**'
   push:
     branches: [main]
     paths:
       - 'signals.json'
-      - 'signals_files.json'
       - 'signals/**'
 
 jobs:
   validate:
-    name: Validate signal entries and manifest
+    name: Validate signal entries
     runs-on: ubuntu-latest
 
     steps:

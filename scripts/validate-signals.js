@@ -4,10 +4,9 @@ const path = require('path');
 // Target paths
 const signalsDir = path.join(__dirname, '../signals');
 const signalsJsonFile = path.join(__dirname, '../signals.json');
-const signalsFilesManifest = path.join(__dirname, '../signals_files.json');
 
 // Schema definitions
-const REQUIRED_FIELDS = ['name', 'frequency', 'protocol', 'description', 'category', 'region', 'contributor', 'filename'];
+const REQUIRED_FIELDS = ['name', 'frequency', 'protocol', 'description', 'category', 'region', 'contributor'];
 const ALLOWED_CATEGORIES = ['garage_doors', 'car_keys', 'intercoms', 'weather_stations', 'custom', 'jamming'];
 const ALLOWED_REGIONS = ['eu', 'us', 'global'];
 
@@ -52,45 +51,7 @@ try {
     .sort();
   const actualSubFilesSet = new Set(actualSubFiles);
 
-  // 3. Read and validate signals_files.json manifest
-  if (!fs.existsSync(signalsFilesManifest)) {
-    reportError('signals_files.json is missing. Please run "npm run sync-signals" to generate it.');
-  } else {
-    try {
-      const manifestJson = fs.readFileSync(signalsFilesManifest, 'utf8');
-      const manifestFiles = JSON.parse(manifestJson);
-      
-      if (!Array.isArray(manifestFiles)) {
-        reportError('signals_files.json must be a JSON array of filenames.');
-      } else {
-        // Compare manifest file list with actual files in signals/
-        const manifestFilesSet = new Set(manifestFiles);
-        
-        // Find if files in signals/ are not in manifest
-        const missingFromManifest = actualSubFiles.filter(f => !manifestFilesSet.has(f));
-        // Find if files in manifest do not exist in signals/
-        const extraInManifest = manifestFiles.filter(f => !actualSubFilesSet.has(f));
-
-        if (missingFromManifest.length > 0 || extraInManifest.length > 0) {
-          reportError('signals_files.json is out of sync with the actual files in signals/.');
-          if (missingFromManifest.length > 0) {
-            console.log(`   Missing from manifest: ${JSON.stringify(missingFromManifest)}`);
-          }
-          if (extraInManifest.length > 0) {
-            console.log(`   Extra in manifest: ${JSON.stringify(extraInManifest)}`);
-          }
-          console.log('👉 Please run "npm run sync-signals" to update signals_files.json.');
-          hasErrors = true;
-        }
-      }
-    } catch (e) {
-      reportError(`signals_files.json could not be read or is invalid JSON: ${e.message}`);
-      console.log('👉 Please run "npm run sync-signals" to recreate signals_files.json.');
-      hasErrors = true;
-    }
-  }
-
-  // 4. Validate entries in signals.json
+  // 3. Validate entries in signals.json
   const declaredFilenames = new Set();
   const declaredNames = new Set();
   const duplicateFilenames = new Set();
@@ -108,6 +69,14 @@ try {
         reportError(`[${label}] Field "${field}" must be a string (got ${typeof value})`);
       }
     });
+
+    // Check that at least one of file or filename is present
+    const fileField = entry.file || entry.filename;
+    if (!fileField || (typeof fileField === 'string' && !fileField.trim())) {
+      reportError(`[${label}] Missing or empty required field: "file" or "filename"`);
+    } else if (typeof fileField !== 'string') {
+      reportError(`[${label}] Field "file" / "filename" must be a string`);
+    }
 
     // Check category validity
     if (entry.category && !ALLOWED_CATEGORIES.includes(entry.category)) {
@@ -131,17 +100,17 @@ try {
       reportError(`[${label}] Invalid converted_status "${entry.converted_status}" — must be one of: ${ALLOWED_CONVERTED_STATUS.join(', ')}`);
     }
 
-    // Check that the referenced filename actually exists in signals/
-    if (entry.filename) {
-      if (!actualSubFilesSet.has(entry.filename)) {
-        reportError(`[${label}] References filename "${entry.filename}" which does not exist in signals/`);
+    // Check that the referenced file actually exists in signals/
+    if (fileField) {
+      if (!actualSubFilesSet.has(fileField)) {
+        reportError(`[${label}] References file "${fileField}" which does not exist in signals/`);
       }
 
       // Check for duplicates
-      if (declaredFilenames.has(entry.filename)) {
-        duplicateFilenames.add(entry.filename);
+      if (declaredFilenames.has(fileField)) {
+        duplicateFilenames.add(fileField);
       } else {
-        declaredFilenames.add(entry.filename);
+        declaredFilenames.add(fileField);
       }
     }
 
@@ -162,7 +131,7 @@ try {
     reportError(`Duplicate signal names found in signals.json: ${Array.from(duplicateNames).join(', ')}`);
   }
 
-  // 5. Check for actual .sub files in signals/ that are missing from signals.json
+  // 4. Check for actual .sub files in signals/ that are missing from signals.json
   const missingFromMetadata = actualSubFiles.filter(file => !declaredFilenames.has(file));
   if (missingFromMetadata.length > 0) {
     reportError(`The following files in signals/ do not have a metadata entry in signals.json:\n   - ${missingFromMetadata.join('\n   - ')}`);
