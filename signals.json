@@ -388,5 +388,45 @@
     "region": "us",
     "contributor": "loulouexe",
     "filename": "Jam_928.00.sub"
+  },
+    {
+    "name": "Tesla Key Fob EU 270MHz",
+    "frequency": "270.00 MHz",
+    "protocol": "RAW",
+    "description": "AM 270 MHz signal captured from a Tesla key fob in the EU region for research and decoding purposes.",
+    "category": "car_keys",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Tesla_EU_AM270.sub"
+  },
+  {
+    "name": "Tesla Key Fob EU 650MHz",
+    "frequency": "650.00 MHz",
+    "protocol": "RAW",
+    "description": "AM 650 MHz signal captured from a Tesla key fob in the EU region for research and decoding purposes.",
+    "category": "car_keys",
+    "region": "eu",
+    "contributor": "loulouexe",
+    "filename": "Tesla_EU_AM650.sub"
+  },
+  {
+    "name": "Tesla Key Fob US 270MHz",
+    "frequency": "270.00 MHz",
+    "protocol": "RAW",
+    "description": "AM 270 MHz signal captured from a Tesla key fob in the US region for research and decoding purposes.",
+    "category": "car_keys",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Tesla_US_AM270.sub"
+  },
+  {
+    "name": "Tesla Key Fob US 650MHz",
+    "frequency": "650.00 MHz",
+    "protocol": "RAW",
+    "description": "AM 650 MHz signal captured from a Tesla key fob in the US region for research and decoding purposes.",
+    "category": "car_keys",
+    "region": "us",
+    "contributor": "loulouexe",
+    "filename": "Tesla_US_AM650.sub"
   }
 ]
