@@ -1,5 +1,25 @@
 [
   {
+    "name": "Car Key Fob 315MHz",
+    "frequency": "315.00 MHz",
+    "protocol": "OOK",
+    "description": "Generic North American car key fob signal at 315 MHz. Recorded from a common aftermarket remote.",
+    "category": "car_keys",
+    "region": "us",
+    "contributor": "rf_hunter",
+    "filename": "car_keyfob_315.sub"
+  },
+  {
+    "name": "Custom ISM Band Beacon",
+    "frequency": "868.35 MHz",
+    "protocol": "RAW",
+    "description": "Custom raw beacon signal captured on the European ISM band at 868 MHz. Purpose unknown — shared for analysis.",
+    "category": "custom",
+    "region": "eu",
+    "contributor": "wave_watcher",
+    "filename": "custom_ism_868.sub"
+  },
+  {
     "name": "Apartment Intercom Bell",
     "frequency": "433.92 MHz",
     "protocol": "Princeton",
@@ -22,11 +42,11 @@
   {
     "name": "Pedestrian Light Request",
     "frequency": "868.35 MHz",
-    "protocol": "RAW",
+    "protocol": "BINRAW",
     "description": "Pedestrian crossing light request signal recorded at 868.35 MHz in a European metropolitan area.",
     "category": "custom",
     "region": "eu",
-    "contributor": "traffic_watcher",
+    "contributor": "louloupexe",
     "filename": "pedestrian_light.sub"
   },
     {
@@ -36,7 +56,7 @@
     "description": "Wideband jamming signal captured around 314.35 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_314.35.sub"
   },
   {
@@ -46,7 +66,7 @@
     "description": "Wideband jamming signal captured around 315.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_315.00.sub"
   },
   {
@@ -56,7 +76,7 @@
     "description": "Wideband jamming signal captured around 330.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_330.00.sub"
   },
   {
@@ -66,7 +86,7 @@
     "description": "Wideband jamming signal captured around 345.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_345.00.sub"
   },
   {
@@ -76,7 +96,7 @@
     "description": "Wideband jamming signal captured around 348.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_348.00.sub"
   },
   {
@@ -86,7 +106,7 @@
     "description": "Wideband jamming signal captured around 387.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_387.00.sub"
   },
   {
@@ -96,7 +116,7 @@
     "description": "Wideband jamming signal captured around 390.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_390.00.sub"
   },
   {
@@ -106,7 +126,7 @@
     "description": "Wideband jamming signal captured around 418.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_418.00.sub"
   },
   {
@@ -116,7 +136,7 @@
     "description": "Wideband jamming signal captured around 433.22 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_433.22.sub"
   },
   {
@@ -126,7 +146,7 @@
     "description": "Wideband jamming signal captured around 433.42 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_433.42.sub"
   },
   {
@@ -136,7 +156,7 @@
     "description": "Wideband jamming signal captured around 433.65 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_433.65.sub"
   },
   {
@@ -146,7 +166,7 @@
     "description": "Wideband jamming signal captured around 433.88 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_433.88.sub"
   },
   {
@@ -156,7 +176,7 @@
     "description": "Wideband jamming signal captured around 433.92 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_433.92.sub"
   },
   {
@@ -166,7 +186,7 @@
     "description": "Wideband jamming signal captured around 434.07 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.07.sub"
   },
   {
@@ -176,7 +196,7 @@
     "description": "Wideband jamming signal captured around 434.17 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.17.sub"
   },
   {
@@ -186,7 +206,7 @@
     "description": "Wideband jamming signal captured around 434.19 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.19.sub"
   },
   {
@@ -196,7 +216,7 @@
     "description": "Wideband jamming signal captured around 434.39 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.39.sub"
   },
   {
@@ -206,7 +226,7 @@
     "description": "Wideband jamming signal captured around 434.42 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.42.sub"
   },
   {
@@ -216,7 +236,7 @@
     "description": "Wideband jamming signal captured around 434.62 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.62.sub"
   },
   {
@@ -226,7 +246,7 @@
     "description": "Wideband jamming signal captured around 434.77 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_434.77.sub"
   },
   {
@@ -236,7 +256,7 @@
     "description": "Wideband jamming signal captured around 438.90 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_438.90.sub"
   },
   {
@@ -246,7 +266,7 @@
     "description": "Wideband jamming signal captured around 440.17 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_440.17.sub"
   },
   {
@@ -256,7 +276,7 @@
     "description": "Wideband jamming signal captured around 464.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_464.00.sub"
   },
   {
@@ -266,7 +286,7 @@
     "description": "Wideband jamming signal captured around 779.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_779.00.sub"
   },
   {
@@ -276,7 +296,7 @@
     "description": "Wideband jamming signal captured around 868.10 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.10.sub"
   },
   {
@@ -286,7 +306,7 @@
     "description": "Wideband jamming signal captured around 868.35 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.35.sub"
   },
   {
@@ -296,7 +316,7 @@
     "description": "Wideband jamming signal captured around 868.40 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.40.sub"
   },
   {
@@ -306,7 +326,7 @@
     "description": "Wideband jamming signal captured around 868.50 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.50.sub"
   },
   {
@@ -316,7 +336,7 @@
     "description": "Wideband jamming signal captured around 868.80 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.80.sub"
   },
   {
@@ -326,7 +346,7 @@
     "description": "Wideband jamming signal captured around 868.90 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.90.sub"
   },
   {
@@ -336,7 +356,7 @@
     "description": "Wideband jamming signal captured around 868.92 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_868.92.sub"
   },
   {
@@ -346,7 +366,7 @@
     "description": "Wideband jamming signal captured around 869.50 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_869.50.sub"
   },
   {
@@ -356,7 +376,7 @@
     "description": "Wideband jamming signal captured around 906.40 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_906.40.sub"
   },
   {
@@ -366,7 +386,7 @@
     "description": "Wideband jamming signal captured around 915.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_915.00.sub"
   },
   {
@@ -376,7 +396,7 @@
     "description": "Wideband jamming signal captured around 925.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_925.00.sub"
   },
   {
@@ -386,7 +406,7 @@
     "description": "Wideband jamming signal captured around 928.00 MHz for laboratory RF analysis and testing.",
     "category": "jamming",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Jam_928.00.sub"
   },
     {
@@ -396,7 +416,7 @@
     "description": "AM 270 MHz signal captured from a Tesla key fob in the EU region for research and decoding purposes.",
     "category": "car_keys",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Tesla_EU_AM270.sub"
   },
   {
@@ -406,7 +426,7 @@
     "description": "AM 650 MHz signal captured from a Tesla key fob in the EU region for research and decoding purposes.",
     "category": "car_keys",
     "region": "eu",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Tesla_EU_AM650.sub"
   },
   {
@@ -416,7 +436,7 @@
     "description": "AM 270 MHz signal captured from a Tesla key fob in the US region for research and decoding purposes.",
     "category": "car_keys",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Tesla_US_AM270.sub"
   },
   {
@@ -426,7 +446,7 @@
     "description": "AM 650 MHz signal captured from a Tesla key fob in the US region for research and decoding purposes.",
     "category": "car_keys",
     "region": "us",
-    "contributor": "loulouexe",
+    "contributor": "louloupexe",
     "filename": "Tesla_US_AM650.sub"
   }
 ]

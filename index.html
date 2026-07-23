@@ -10,8 +10,8 @@
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content="Flipper Signal DB — Community Sub-GHz Library" />
   <meta property="og:description" content="Browse, download and contribute Flipper Zero .sub signal files. Open-source community database." />
-  <meta property="og:url"         content="https://og34.github.io/flipper-signal-db/" />
-  <meta property="og:image"       content="https://og34.github.io/flipper-signal-db/og-image.png" />
+  <meta property="og:url"         content="https://louloupexe.github.io/flipper-signal-db/" />
+  <meta property="og:image"       content="https://louloupexe.github.io/flipper-signal-db/og-image.png" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
 
@@ -219,7 +219,6 @@
       transition: all .18s; white-space: nowrap;
     }
     .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
-
     .btn-accent {
       display: flex; align-items: center; gap: 6px; padding: 7px 14px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -228,6 +227,7 @@
       transition: opacity .2s, transform .15s; white-space: nowrap;
     }
     .btn-accent:hover { opacity: .88; transform: scale(1.02); }
+    .btn-accent:disabled { opacity: 0.45; cursor: not-allowed; transform: none; pointer-events: none; }
 
     /* ── Hero ── */
     .hero {
@@ -590,6 +590,36 @@
 
 <div id="toast-container"></div>
 
+<!-- ── Converter Modal ── -->
+<div class="modal-overlay" id="convert-modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-title">BINRAW → RAW Converter</div>
+      </div>
+      <button class="modal-close" onclick="closeConvertModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Upload a Flipper .sub file with Protocol: BinRAW and download a converted RAW .sub file.</p>
+      
+      <div class="drop-zone" id="convert-drop-zone" onclick="document.getElementById('convert-file-input').click()">
+        <input type="file" id="convert-file-input" accept=".sub" style="display:none;" />
+        <div class="drop-icon" id="convert-drop-icon">📂</div>
+        <h3 id="convert-drop-title">Drop your .sub file here</h3>
+        <p id="convert-drop-sub">or click to browse</p>
+      </div>
+
+      <div id="convert-status" style="padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 0.85rem; font-weight: 600; text-align: center; background: var(--surface2); color: var(--muted); transition: all 0.2s;">
+        Waiting for file
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content: flex-end; gap: 10px;">
+      <button class="btn-ghost" onclick="closeConvertModal()">Close</button>
+      <button class="btn-accent" id="btn-convert-download" onclick="runConversion()" disabled>Convert & Download</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Modal ── -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal">
@@ -613,7 +643,7 @@
     </div>
     <div class="modal-footer">
       <div class="contributor" id="modal-contributor"></div>
-      <a class="btn-dl" id="modal-dl" href="" download="">⬇ Download .sub</a>
+      <a class="btn-dl" id="modal-dl" href="" download="" onclick="event.stopPropagation();handleDownloadOrSerial(currentModal ? currentModal.filename : '',event)" title="Send to Flipper via Web Serial, or download if unavailable">📲 Send to Flipper / Download</a>
     </div>
   </div>
 </div>
@@ -632,7 +662,9 @@
     <div class="header-right">
       <span class="pill" id="header-count"><span>—</span> signals</span>
       <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark">🌙</button>
-      <a class="btn-ghost" href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">
+      <button class="btn-ghost" id="disconnect-btn" onclick="disconnectFlipper()" style="display:none;color:var(--red);border-color:rgba(255,95,95,.25);align-items:center;gap:6px;" title="Disconnect Flipper Zero">🔌 Disconnect</button>
+      <button class="btn-ghost" onclick="openConvertModal()" title="Convert Flipper .sub files from BinRAW to RAW format">🔄 Convert BINRAW → RAW</button>
+      <a class="btn-ghost" href="https://github.com/louloupexe/flipper-signal-db" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
@@ -800,7 +832,7 @@
       </div>
       <div class="output-block" id="output-block">
         <div class="output-toolbar">
-          <span class="output-title">signals.json entry — ready to paste</span>
+          <span class="output-title">signals_files.json entry — ready to paste</span>
           <button class="btn-copy" onclick="copyOutput()">📋 Copy</button>
         </div>
         <pre id="output-pre"></pre>
@@ -808,10 +840,10 @@
           <div class="submit-step-card">
             <div class="submit-step-num">1</div>
             <div class="submit-step-body">
-              <div class="submit-step-title">Paste into signals.json</div>
+              <div class="submit-step-title">Paste into signals_files.json</div>
               <div class="submit-step-desc">JSON was copied to your clipboard. Click below — GitHub opens the file editor directly. Paste at the end of the array, then click <strong>Propose changes</strong>.</div>
-              <a class="submit-step-btn" id="btn-open-json" href="https://github.com/og34/flipper-signal-db/edit/main/signals.json" target="_blank" rel="noopener" onclick="copyOutput()">
-                📝 Open signals.json on GitHub
+              <a class="submit-step-btn" id="btn-open-json" href="https://github.com/louloupexe/flipper-signal-db/edit/main/signals.json" target="_blank" rel="noopener" onclick="copyOutput()">
+                📝 Open signals_files.json on GitHub
               </a>
             </div>
           </div>
@@ -820,7 +852,7 @@
             <div class="submit-step-body">
               <div class="submit-step-title">Upload your .sub file</div>
               <div class="submit-step-desc">Click below — GitHub opens the <code>signals/</code> folder. Use <strong>Add file → Upload files</strong> to upload your <code id="ns-fn"></code> file.</div>
-              <a class="submit-step-btn secondary" id="btn-open-signals" href="https://github.com/og34/flipper-signal-db/upload/main/signals" target="_blank" rel="noopener">
+              <a class="submit-step-btn secondary" id="btn-open-signals" href="https://github.com/louloupexe/flipper-signal-db/upload/main/signals" target="_blank" rel="noopener">
                 📂 Open signals/ folder on GitHub
               </a>
             </div>
@@ -841,12 +873,12 @@
       <div class="steps-grid">
         <div class="step-card"><div class="step-num">1</div><h3>Fork the repo</h3><p>Click <strong>Fork</strong> on GitHub to copy <code>flipper-signal-db</code> to your account.</p></div>
         <div class="step-card"><div class="step-num">2</div><h3>Add your .sub file</h3><p>Upload your Flipper <code>.sub</code> file into the <code>signals/</code> folder.</p></div>
-        <div class="step-card"><div class="step-num">3</div><h3>Update signals.json</h3><p>Append a new entry to the array — see schema below.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3>Update signals_files.json</h3><p>Append a new entry to the array — see schema below.</p></div>
         <div class="step-card"><div class="step-num">4</div><h3>Open a Pull Request</h3><p>Submit a PR against <code>main</code>. CI validates your entry automatically.</p></div>
       </div>
       <div class="schema-block">
         <div style="padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">signals.json format</span>
+          <span style="font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">signals_files.json format</span>
           <button class="btn-copy" onclick="copySchema()">📋 Copy</button>
         </div>
         <pre><span class="jp">{</span>
@@ -868,14 +900,14 @@
         <div class="guideline">❌ No personally identifiable information</div>
       </div>
       <div style="margin-top:22px">
-        <a class="btn-accent" href="https://github.com/og34/flipper-signal-db/compare" target="_blank" rel="noopener" style="display:inline-flex">⬆️ Open Pull Request on GitHub</a>
+        <a class="btn-accent" href="https://github.com/louloupexe/flipper-signal-db/compare" target="_blank" rel="noopener" style="display:inline-flex">⬆️ Open Pull Request on GitHub</a>
       </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>Built by the community · <a href="https://github.com/og34/flipper-signal-db" target="_blank" rel="noopener">og34/flipper-signal-db</a> · MIT License</p>
+  <p>Built by the community · <a href="https://github.com/louloupexe/flipper-signal-db" target="_blank" rel="noopener">louloupexe/flipper-signal-db</a> · MIT License</p>
   <p style="margin-top:5px;font-size:.74rem">Use responsibly. Only transmit on frequencies you are legally permitted to use.</p>
 </footer>
 
@@ -891,6 +923,419 @@
   let activeCategory = 'all', activeRegion = 'all', searchQuery = '', sortMode = 'default';
   let freqMin = 0, freqMax = 9999, sliderMin = 0, sliderMax = 9999;
   let currentModal = null;
+  let flipperPort = null, readerInstance = null;
+  let flipperParsedData = null;
+
+  /* ── Web Serial / Flipper ── */
+  async function handleDownloadOrSerial(filename, event) {
+    if (event) event.preventDefault();
+
+    // 1. Fetch file content first
+    let fileContent = '';
+    try {
+      const res = await fetch(`signals/${filename}`);
+      if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+      fileContent = await res.text();
+    } catch (err) {
+      console.error(`[Flipper Serial] Failed to fetch signal file:`, err);
+      toast('Failed to fetch signal file', 'error');
+      downloadFallback(filename);
+      return;
+    }
+
+    // 2. If Web Serial API is not supported
+    if (!navigator.serial) {
+      console.log('[Flipper Serial] Web Serial API not supported by browser. Falling back to download.');
+      downloadFallback(filename);
+      return;
+    }
+
+    try {
+      // 3. Connect/Verify connection to Flipper
+      await connectFlipper();
+
+      // 4. Send file
+      toast(`Sending ${filename} to Flipper Zero...`, 'info');
+      await sendFileToFlipper(filename, fileContent);
+      
+      // Success! Auto-disconnect immediately to release the serial port
+      toast('Sent to Flipper successfully. Device disconnected automatically.', 'success');
+      await disconnectFlipper();
+    } catch (err) {
+      console.error('[Flipper Serial] Serial transfer error:', err);
+      let errorMsg = 'Unable to send to Flipper. Downloading the file instead.';
+      if (err && err.message && (err.message.toLowerCase().includes('busy') || err.message.toLowerCase().includes('denied') || err.message.toLowerCase().includes('locked'))) {
+        errorMsg = 'Flipper serial port is busy or access was denied. Downloading file instead.';
+      }
+      toast(errorMsg, 'error');
+      downloadFallback(filename);
+      
+      // Ensure we clean up connection state on error
+      await disconnectFlipper();
+    }
+  }
+
+  async function connectFlipper() {
+    if (flipperPort && flipperPort.writable && flipperPort.readable) {
+      return; // Already connected
+    }
+
+    try {
+      toast('Connecting to Flipper Zero... Please select your device.', 'info');
+      flipperPort = await navigator.serial.requestPort();
+      await flipperPort.open({ baudRate: 115200 });
+
+      startReaderLoop();
+      updateDisconnectButton();
+      console.log('[Flipper Serial] Connected to Flipper Zero successfully.');
+    } catch (err) {
+      flipperPort = null;
+      updateDisconnectButton();
+      throw err;
+    }
+  }
+
+  function startReaderLoop() {
+    if (!flipperPort || !flipperPort.readable) return;
+
+    const reader = flipperPort.readable.getReader();
+    readerInstance = reader;
+
+    (async () => {
+      const decoder = new TextDecoder();
+      try {
+        while (flipperPort && flipperPort.readable) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (value) {
+            console.log('[Flipper Serial RX]:', decoder.decode(value));
+          }
+        }
+      } catch (err) {
+        console.warn('[Flipper Serial] Reader loop stopped:', err);
+      } finally {
+        try {
+          reader.releaseLock();
+        } catch (e) {}
+        if (readerInstance === reader) readerInstance = null;
+      }
+    })();
+  }
+
+  async function disconnectFlipper() {
+    try {
+      if (readerInstance) {
+        await readerInstance.cancel();
+        readerInstance = null;
+      }
+      if (flipperPort) {
+        await flipperPort.close();
+        flipperPort = null;
+      }
+      console.log('[Flipper Serial] Disconnected successfully.');
+      toast('Flipper disconnected successfully.', 'success');
+    } catch (err) {
+      console.error('[Flipper Serial] Error during disconnect:', err);
+      flipperPort = null;
+    } finally {
+      updateDisconnectButton();
+    }
+  }
+
+  async function sendFileToFlipper(filename, fileContent) {
+    if (!flipperPort || !flipperPort.writable) {
+      throw new Error('Flipper Zero port is not writable.');
+    }
+
+    const encoder = new TextEncoder();
+    const writer = flipperPort.writable.getWriter();
+
+    try {
+      // 1. Enter CLI writing mode
+      const writeCommand = `storage write /ext/subghz/${filename}\r\n`;
+      await writer.write(encoder.encode(writeCommand));
+
+      // Wait a moment for CLI to process command and start writing mode
+      await new Promise(r => setTimeout(r, 300));
+
+      // 2. Write file contents in chunks to prevent serial buffer overflow
+      const data = encoder.encode(fileContent);
+      const chunkSize = 256;
+      for (let i = 0; i < data.length; i += chunkSize) {
+        const chunk = data.slice(i, i + chunkSize);
+        await writer.write(chunk);
+        // Wait a tiny bit between chunks
+        await new Promise(r => setTimeout(r, 25));
+      }
+
+      // Wait a moment before terminating writing mode
+      await new Promise(r => setTimeout(r, 100));
+
+      // 3. Send Ctrl+C (ASCII 3) to stop writing and save the file
+      await writer.write(new Uint8Array([3]));
+
+      // Wait a brief moment to let Flipper finalize saving the file
+      await new Promise(r => setTimeout(r, 200));
+    } finally {
+      writer.releaseLock();
+    }
+  }
+
+  /* ── BINRAW → RAW Converter ── */
+  function openConvertModal() {
+    document.getElementById('convert-file-input').value = '';
+    document.getElementById('convert-drop-title').textContent = 'Drop your .sub file here';
+    document.getElementById('convert-drop-sub').textContent = 'or click to browse';
+    document.getElementById('convert-drop-zone').classList.remove('has-file');
+    document.getElementById('convert-drop-icon').textContent = '📂';
+    
+    const status = document.getElementById('convert-status');
+    status.textContent = 'Waiting for file';
+    status.style.background = 'var(--surface2)';
+    status.style.borderColor = 'var(--border)';
+    status.style.color = 'var(--muted)';
+    
+    document.getElementById('btn-convert-download').disabled = true;
+    flipperParsedData = null;
+
+    document.getElementById('convert-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeConvertModal() {
+    document.getElementById('convert-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function initConvertDragDrop() {
+    const dropZone = document.getElementById('convert-drop-zone');
+    const fileInput = document.getElementById('convert-file-input');
+    if (!dropZone || !fileInput) return;
+    
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = e => validateAndParseBinRAW(e.target.result, f.name);
+      r.readAsText(f);
+    });
+    
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const f = e.dataTransfer.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = ev => validateAndParseBinRAW(ev.target.result, f.name);
+      r.readAsText(f);
+    });
+  }
+
+  function validateAndParseBinRAW(text, filename) {
+    const lines = text.split(/\r?\n/);
+    const metadata = {};
+    const rawDataLines = [];
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      
+      const colonIndex = trimmed.indexOf(':');
+      if (colonIndex === -1) continue;
+      
+      const key = trimmed.slice(0, colonIndex).trim();
+      const val = trimmed.slice(colonIndex + 1).trim();
+      
+      if (key === 'Data_RAW') {
+        rawDataLines.push(val);
+      } else {
+        metadata[key] = val;
+      }
+    }
+    
+    const status = document.getElementById('convert-status');
+    const downloadBtn = document.getElementById('btn-convert-download');
+    
+    const filetype = metadata['Filetype'];
+    if (!filetype || !filetype.includes('Flipper SubGhz')) {
+      showConvertError('Invalid file: Not a Flipper SubGhz file.');
+      return;
+    }
+    
+    const protocol = metadata['Protocol'];
+    if (protocol !== 'BinRAW') {
+      showConvertError('This converter only accepts .sub files using Protocol: BinRAW.');
+      return;
+    }
+    
+    const te = parseInt(metadata['TE'], 10);
+    const bitRaw = parseInt(metadata['Bit_RAW'] || metadata['Bit'], 10);
+    
+    if (isNaN(te) || isNaN(bitRaw) || rawDataLines.length === 0) {
+      showConvertError('Invalid file: Missing TE, Bit_RAW, or Data_RAW.');
+      return;
+    }
+    
+    status.textContent = 'Valid BinRAW file detected';
+    status.style.background = 'rgba(61,220,132,.12)';
+    status.style.borderColor = 'rgba(61,220,132,.25)';
+    status.style.color = 'var(--green)';
+    
+    document.getElementById('convert-drop-icon').textContent = '✅';
+    document.getElementById('convert-drop-title').textContent = filename;
+    document.getElementById('convert-drop-sub').textContent = `BinRAW: ${bitRaw} bits · TE ${te}µs`;
+    document.getElementById('convert-drop-zone').classList.add('has-file');
+    
+    downloadBtn.disabled = false;
+    
+    flipperParsedData = {
+      filename,
+      metadata,
+      te,
+      bitRaw,
+      rawData: rawDataLines.join(' ')
+    };
+  }
+
+  function showConvertError(message) {
+    const status = document.getElementById('convert-status');
+    status.textContent = message;
+    status.style.background = 'rgba(255,95,95,.12)';
+    status.style.borderColor = 'rgba(255,95,95,.25)';
+    status.style.color = 'var(--red)';
+    
+    document.getElementById('btn-convert-download').disabled = true;
+    document.getElementById('convert-drop-zone').classList.remove('has-file');
+    document.getElementById('convert-drop-icon').textContent = '❌';
+    document.getElementById('convert-drop-title').textContent = 'Unsupported file';
+    document.getElementById('convert-drop-sub').textContent = 'Try another .sub file';
+    
+    toast(message, 'error');
+  }
+
+  function runConversion() {
+    if (!flipperParsedData) return;
+    
+    try {
+      const { filename, metadata, te, bitRaw, rawData } = flipperParsedData;
+      const hexString = rawData.replace(/\s+/g, '');
+      
+      let bits = '';
+      const hexToBin = {
+        '0': '0000', '1': '0001', '2': '0010', '3': '0011',
+        '4': '0100', '5': '0101', '6': '0110', '7': '0111',
+        '8': '1000', '9': '1001', 'a': '1010', 'b': '1011',
+        'c': '1100', 'd': '1101', 'e': '1110', 'f': '1111',
+        'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101',
+        'E': '1110', 'F': '1111'
+      };
+      
+      for (const char of hexString) {
+        const bin = hexToBin[char];
+        if (bin) bits += bin;
+      }
+      
+      bits = bits.slice(0, bitRaw);
+      
+      const timings = [];
+      if (bits.length > 0) {
+        let currentBit = bits[0];
+        let runLength = 1;
+        
+        for (let i = 1; i < bits.length; i++) {
+          if (bits[i] === currentBit) {
+            runLength++;
+          } else {
+            const duration = runLength * te;
+            timings.push(currentBit === '1' ? duration : -duration);
+            currentBit = bits[i];
+            runLength = 1;
+          }
+        }
+        const duration = runLength * te;
+        timings.push(currentBit === '1' ? duration : -duration);
+      }
+      
+      const cleanTimings = [];
+      for (const t of timings) {
+        if (t === 0) continue;
+        if (cleanTimings.length > 0 && Math.sign(t) === Math.sign(cleanTimings[cleanTimings.length - 1])) {
+          cleanTimings[cleanTimings.length - 1] += t;
+        } else {
+          cleanTimings.push(t);
+        }
+      }
+      
+      const outputLines = [
+        'Filetype: Flipper SubGhz RAW File',
+        `Version: ${metadata['Version'] || '1'}`,
+        `Frequency: ${metadata['Frequency'] || '433920000'}`,
+        `Preset: ${metadata['Preset'] || 'FuriHalSubGhzPresetOok650Async'}`,
+        'Protocol: RAW'
+      ];
+      
+      const maxTimingsPerLine = 512;
+      for (let i = 0; i < cleanTimings.length; i += maxTimingsPerLine) {
+        const chunk = cleanTimings.slice(i, i + maxTimingsPerLine);
+        outputLines.push(`RAW_Data: ${chunk.join(' ')}`);
+      }
+      
+      const newContent = outputLines.join('\n') + '\n';
+      const baseName = filename.replace(/\.sub$/i, '');
+      const outName = `${baseName}_RAW.sub`;
+      
+      const blob = new Blob([newContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = outName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      const status = document.getElementById('convert-status');
+      status.textContent = 'Conversion successful';
+      status.style.background = 'rgba(61,220,132,.12)';
+      status.style.borderColor = 'rgba(61,220,132,.25)';
+      status.style.color = 'var(--green)';
+      
+      toast('File converted and downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('[BinRAW Converter] Error during conversion:', err);
+      toast('An error occurred during conversion.', 'error');
+    }
+  }
+
+  function downloadFallback(filename) {
+    const link = document.createElement('a');
+    link.href = `signals/${filename}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast('Download started — copy to SD:/subghz/', 'success');
+  }
+
+  function updateDisconnectButton() {
+    const btn = document.getElementById('disconnect-btn');
+    if (!btn) return;
+    if (flipperPort) {
+      btn.style.display = 'inline-flex';
+    } else {
+      btn.style.display = 'none';
+    }
+  }
 
   /* ── Init ── */
   async function init() {
@@ -929,6 +1374,7 @@
       updateStats();
       render();
       registerSW();
+      initConvertDragDrop();
     } catch (err) {
       console.error('[Signals Sync] Error loading signals:', err);
       document.getElementById('grid').innerHTML =
@@ -1122,8 +1568,9 @@
           <span class="contributor-name">${esc(s.contributor||'anonymous')}</span>
         </div>
         <a class="btn-dl" href="signals/${esc(s.filename)}" download="${esc(s.filename)}"
-           onclick="event.stopPropagation();toast('Download started — copy to SD:/subghz/','success')">
-          ⬇ .sub
+           onclick="event.stopPropagation();handleDownloadOrSerial('${esc(s.filename)}',event)"
+           title="Send to Flipper via Web Serial, or download if unavailable">
+          📲 Send / DL
         </a>
       </div>
     </div>`;
@@ -1184,7 +1631,10 @@
   document.getElementById('modal-overlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.getElementById('convert-modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('convert-modal-overlay')) closeConvertModal();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeConvertModal(); } });
 
   /* ── Utils ── */
   function esc(s) {
