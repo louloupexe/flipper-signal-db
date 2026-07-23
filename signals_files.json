@@ -2,6 +2,10 @@
   "intercom_bell_433.sub",
   "acurite_weather_433.sub",
   "pedestrian_light.sub",
+  "Tesla_EU_AM270.sub",
+  "Tesla_EU_AM650.sub",
+  "Tesla_US_AM270.sub",
+  "Tesla_US_AM650.sub",
   "Jam_314.35.sub",
   "Jam_315.00.sub",
   "Jam_330.00.sub",
@@ -37,9 +41,5 @@
   "Jam_906.40.sub",
   "Jam_915.00.sub",
   "Jam_925.00.sub",
-  "Jam_928.00.sub",
-  "Tesla_EU_AM270.sub",
-  "Tesla_EU_AM650.sub",
-  "Tesla_US_AM270.sub",
-  "Tesla_US_AM650.sub"
+  "Jam_928.00.sub"
 ]
