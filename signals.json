@@ -7,7 +7,8 @@
     "category": "car_keys",
     "region": "us",
     "contributor": "rf_hunter",
-    "filename": "car_keyfob_315.sub"
+    "filename": "car_keyfob_315.sub",
+    "test_status": "works"
   },
   {
     "name": "Custom ISM Band Beacon",
@@ -17,7 +18,8 @@
     "category": "custom",
     "region": "eu",
     "contributor": "wave_watcher",
-    "filename": "custom_ism_868.sub"
+    "filename": "custom_ism_868.sub",
+    "test_status": "works"
   },
   {
     "name": "Apartment Intercom Bell",
@@ -27,7 +29,8 @@
     "category": "intercoms",
     "region": "eu",
     "contributor": "signal_collector",
-    "filename": "intercom_bell_433.sub"
+    "filename": "intercom_bell_433.sub",
+    "test_status": "works"
   },
   {
     "name": "Acurite Weather Station 433MHz",
@@ -37,7 +40,8 @@
     "category": "weather_stations",
     "region": "us",
     "contributor": "iot_tinkerer",
-    "filename": "acurite_weather_433.sub"
+    "filename": "acurite_weather_433.sub",
+    "test_status": "works"
   },
   {
     "name": "Pedestrian Light Request",
@@ -47,9 +51,10 @@
     "category": "custom",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "pedestrian_light.sub"
+    "filename": "pedestrian_light.sub",
+    "test_status": "works"
   },
-    {
+  {
     "name": "Jamming 314.35MHz",
     "frequency": "314.35 MHz",
     "protocol": "RAW",
@@ -57,7 +62,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_314.35.sub"
+    "filename": "Jam_314.35.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 315.00MHz",
@@ -67,7 +73,8 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_315.00.sub"
+    "filename": "Jam_315.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 330.00MHz",
@@ -77,7 +84,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_330.00.sub"
+    "filename": "Jam_330.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 345.00MHz",
@@ -87,7 +95,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_345.00.sub"
+    "filename": "Jam_345.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 348.00MHz",
@@ -97,7 +106,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_348.00.sub"
+    "filename": "Jam_348.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 387.00MHz",
@@ -107,7 +117,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_387.00.sub"
+    "filename": "Jam_387.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 390.00MHz",
@@ -117,7 +128,8 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_390.00.sub"
+    "filename": "Jam_390.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 418.00MHz",
@@ -127,7 +139,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_418.00.sub"
+    "filename": "Jam_418.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 433.22MHz",
@@ -137,7 +150,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_433.22.sub"
+    "filename": "Jam_433.22.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 433.42MHz",
@@ -147,7 +161,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_433.42.sub"
+    "filename": "Jam_433.42.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 433.65MHz",
@@ -157,7 +172,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_433.65.sub"
+    "filename": "Jam_433.65.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 433.88MHz",
@@ -167,7 +183,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_433.88.sub"
+    "filename": "Jam_433.88.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 433.92MHz",
@@ -177,7 +194,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_433.92.sub"
+    "filename": "Jam_433.92.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.07MHz",
@@ -187,7 +205,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.07.sub"
+    "filename": "Jam_434.07.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.17MHz",
@@ -197,7 +216,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.17.sub"
+    "filename": "Jam_434.17.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.19MHz",
@@ -207,7 +227,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.19.sub"
+    "filename": "Jam_434.19.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.39MHz",
@@ -217,7 +238,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.39.sub"
+    "filename": "Jam_434.39.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.42MHz",
@@ -227,7 +249,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.42.sub"
+    "filename": "Jam_434.42.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.62MHz",
@@ -237,7 +260,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.62.sub"
+    "filename": "Jam_434.62.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 434.77MHz",
@@ -247,7 +271,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_434.77.sub"
+    "filename": "Jam_434.77.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 438.90MHz",
@@ -257,7 +282,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_438.90.sub"
+    "filename": "Jam_438.90.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 440.17MHz",
@@ -267,7 +293,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_440.17.sub"
+    "filename": "Jam_440.17.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 464.00MHz",
@@ -277,7 +304,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_464.00.sub"
+    "filename": "Jam_464.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 779.00MHz",
@@ -287,7 +315,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_779.00.sub"
+    "filename": "Jam_779.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.10MHz",
@@ -297,7 +326,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.10.sub"
+    "filename": "Jam_868.10.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.35MHz",
@@ -307,7 +337,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.35.sub"
+    "filename": "Jam_868.35.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.40MHz",
@@ -317,7 +348,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.40.sub"
+    "filename": "Jam_868.40.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.50MHz",
@@ -327,7 +359,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.50.sub"
+    "filename": "Jam_868.50.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.80MHz",
@@ -337,7 +370,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.80.sub"
+    "filename": "Jam_868.80.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.90MHz",
@@ -347,7 +381,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.90.sub"
+    "filename": "Jam_868.90.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 868.92MHz",
@@ -357,7 +392,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_868.92.sub"
+    "filename": "Jam_868.92.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 869.50MHz",
@@ -367,7 +403,8 @@
     "category": "jamming",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Jam_869.50.sub"
+    "filename": "Jam_869.50.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 906.40MHz",
@@ -377,7 +414,8 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_906.40.sub"
+    "filename": "Jam_906.40.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 915.00MHz",
@@ -387,7 +425,8 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_915.00.sub"
+    "filename": "Jam_915.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 925.00MHz",
@@ -397,7 +436,8 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_925.00.sub"
+    "filename": "Jam_925.00.sub",
+    "test_status": "works"
   },
   {
     "name": "Jamming 928.00MHz",
@@ -407,9 +447,10 @@
     "category": "jamming",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Jam_928.00.sub"
+    "filename": "Jam_928.00.sub",
+    "test_status": "works"
   },
-    {
+  {
     "name": "Tesla Key Fob EU 270MHz",
     "frequency": "270.00 MHz",
     "protocol": "RAW",
@@ -417,7 +458,8 @@
     "category": "car_keys",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Tesla_EU_AM270.sub"
+    "filename": "Tesla_EU_AM270.sub",
+    "test_status": "works"
   },
   {
     "name": "Tesla Key Fob EU 650MHz",
@@ -427,7 +469,8 @@
     "category": "car_keys",
     "region": "eu",
     "contributor": "louloupexe",
-    "filename": "Tesla_EU_AM650.sub"
+    "filename": "Tesla_EU_AM650.sub",
+    "test_status": "works"
   },
   {
     "name": "Tesla Key Fob US 270MHz",
@@ -437,7 +480,8 @@
     "category": "car_keys",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Tesla_US_AM270.sub"
+    "filename": "Tesla_US_AM270.sub",
+    "test_status": "works"
   },
   {
     "name": "Tesla Key Fob US 650MHz",
@@ -447,6 +491,7 @@
     "category": "car_keys",
     "region": "us",
     "contributor": "louloupexe",
-    "filename": "Tesla_US_AM650.sub"
+    "filename": "Tesla_US_AM650.sub",
+    "test_status": "works"
   }
 ]
