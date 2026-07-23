@@ -1,15 +1,5 @@
 [
   {
-    "name": "Generic Garage Door 433MHz",
-    "frequency": "433.92 MHz",
-    "protocol": "OOK",
-    "description": "Common rolling-code garage door opener signal captured at 433.92 MHz. Works with many generic single-channel remotes.",
-    "category": "garage_doors",
-    "region": "eu",
-    "contributor": "flipper_fan_42",
-    "filename": "garage_door_433.sub"
-  },
-  {
     "name": "Car Key Fob 315MHz",
     "frequency": "315.00 MHz",
     "protocol": "OOK",
