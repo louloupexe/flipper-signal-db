@@ -262,6 +262,7 @@
     .stat-item[data-cat="intercoms"]        .stat-num { color: var(--purple); }
     .stat-item[data-cat="weather_stations"] .stat-num { color: var(--teal); }
     .stat-item[data-cat="custom"]           .stat-num { color: var(--yellow); }
+    .stat-item[data-cat="jamming"]          .stat-num { color: var(--red); }
 
     /* ── Toolbar ── */
     .toolbar {
@@ -370,6 +371,7 @@
     .card[data-cat="intercoms"]::before        { background: var(--purple); }
     .card[data-cat="weather_stations"]::before { background: var(--teal); }
     .card[data-cat="custom"]::before           { background: var(--yellow); }
+    .card[data-cat="jamming"]::before          { background: var(--red); }
 
     .card-wave { width: 100%; height: 44px; display: block; }
 
@@ -393,6 +395,7 @@
     .cat-chip.intercoms        { background: rgba(155,109,255,.12); color: var(--purple); }
     .cat-chip.weather_stations { background: rgba(45,212,191,.12); color: var(--teal); }
     .cat-chip.custom           { background: rgba(247,201,72,.12); color: var(--yellow); }
+    .cat-chip.jamming          { background: rgba(255,95,95,.12); color: var(--red); }
 
     .card-desc {
       font-size: .82rem; color: var(--muted); line-height: 1.55;
@@ -678,6 +681,10 @@
       <span class="stat-num" id="s-custom">—</span>
       <span class="stat-label">Custom</span>
     </div>
+    <div class="stat-item" data-cat="jamming">
+      <span class="stat-num" id="s-jamming">—</span>
+      <span class="stat-label">Jamming</span>
+    </div>
   </div>
 </div>
 
@@ -754,6 +761,7 @@
             <option value="car_keys">Car Keys</option>
             <option value="intercoms">Intercoms</option>
             <option value="weather_stations">Weather Stations</option>
+            <option value="jamming">Jamming</option>
             <option value="custom">Custom / Unknown</option>
           </select>
         </div>
@@ -873,9 +881,9 @@
 
 <script>
   /* ── Constants ── */
-  const CATS = { garage_doors:'Garage Doors', car_keys:'Car Keys', intercoms:'Intercoms', weather_stations:'Weather Stations', custom:'Custom' };
+  const CATS = { garage_doors:'Garage Doors', car_keys:'Car Keys', intercoms:'Intercoms', weather_stations:'Weather Stations', jamming:'Jamming', custom:'Custom' };
   const REGIONS = { eu:'🇪🇺 EU', us:'🇺🇸 US', global:'📡 Global' };
-  const COLORS = { garage_doors:'#3ddc84', car_keys:'#4fa3e0', intercoms:'#9b6dff', weather_stations:'#2dd4bf', custom:'#f7c948' };
+  const COLORS = { garage_doors:'#3ddc84', car_keys:'#4fa3e0', intercoms:'#9b6dff', weather_stations:'#2dd4bf', jamming:'#ff5f5f', custom:'#f7c948' };
   const AV_COLORS = ['#f7931e','#ff5f1f','#3ddc84','#4fa3e0','#9b6dff','#2dd4bf','#f7c948','#ff5f5f'];
 
   /* ── State ── */

@@ -8,7 +8,7 @@ const signalsFilesManifest = path.join(__dirname, '../signals_files.json');
 
 // Schema definitions
 const REQUIRED_FIELDS = ['name', 'frequency', 'protocol', 'description', 'category', 'region', 'contributor', 'filename'];
-const ALLOWED_CATEGORIES = ['garage_doors', 'car_keys', 'intercoms', 'weather_stations', 'custom'];
+const ALLOWED_CATEGORIES = ['garage_doors', 'car_keys', 'intercoms', 'weather_stations', 'custom', 'jamming'];
 const ALLOWED_REGIONS = ['eu', 'us', 'global'];
 
 let hasErrors = false;

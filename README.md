@@ -40,6 +40,7 @@ flipper-signal-db/
 | Car Keys | `car_keys` |
 | Intercoms | `intercoms` |
 | Weather Stations | `weather_stations` |
+| Jamming | `jamming` |
 | Custom / Unknown | `custom` |
 
 ---
